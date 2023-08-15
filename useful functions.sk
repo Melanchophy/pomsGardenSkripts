@@ -1,0 +1,33 @@
+function damageTool(e: entity, n: number):
+	set {_bC} to (100/(1+level of unbreaking of {_e}'s tool))
+	chance of {_bC}%:
+		damage {_e}'s tool by {_n}
+	if damage value of {_e}'s tool is greater than or equal to max durability of {_e}'s tool:
+		play sound "item.shield.break" at {_e}
+		remove 1 from item amount of {_e}'s tool
+
+function damageCheck(a: entity, v: entity) :: boolean:
+	if "%{_v}%" does not contain "dropped":
+		if {_v} is not item frame or arrow or experience orb or {_a}:			
+			return true
+	return false
+
+function cooldown(e: entity, t: text, cd: timespan) :: boolean:
+	if {te::%{_e}%::%{_t}%} <= now:
+		set {te::%{_e}%::%{_t}%} to {_cd} after now
+		return true
+	else if {te::%{_e}%::%{_t}%} is not set:
+		set {te::%{_e}%::%{_t}%} to {_cd} after now
+		return true
+	else:
+		if difference between now and {te::%{_e}%::%{_t}%} is greater than 3 seconds:
+			send action bar "&7&o// %difference between now and {te::%{_e}%::%{_t}%}% \\" to {_e}
+
+function particleArc(l: location, dir: number, numLoops: number, particlesPerLoop: number, timePerLoop: timespan, concentration: number, radius: number, particle: particle, pitch: number):
+	set {_totalLength} to ({_numLoops} * {_particlesPerLoop} * {_concentration} / 2) - ({_concentration}/2)
+	loop {_numLoops} times:
+		loop {_particlesPerLoop} times:
+			set {_v} to spherical vector radius {_radius}, yaw ({_totalLoops} * {_concentration}) + {_dir} - {_totalLength}, pitch {_pitch}
+			draw 1 {_particle} at {_l} ~ {_v} with extra 0.0 to all players
+			add 1 to {_totalLoops}
+		wait {_timePerLoop}

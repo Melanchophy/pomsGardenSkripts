@@ -1,0 +1,33 @@
+on load:
+	set {tr::location::origin} to location(0.5, 0, 0.5, world "world")
+
+on player portal:
+	if player's world is "spawn":
+		cancel event
+		if cooldown(player, "failedtotp", 1 seconds) is true:
+			send "&7Teleporting %player% to Hypoxia..."
+			loop 2 times:
+				set {_l} to raycastFromSkyDownward(location 0, 60, 0 in world "world", 4000, 200)
+				if block below {_l} is not air or water or lava:
+					set {_s} to true
+					exit loop
+				wait 5 ticks
+			if {_s} is true:
+				send "&aLocation found!%nl%&7Teleporting..." to player
+				wait 5 ticks
+				teleport player to location 1 block above {_l}
+				if {tr::player::%player's uuid%::portalFirstEnter} is not set:
+					set {tr::player::%player's uuid%::portalFirstEnter} to true
+					wait 45 ticks
+					send "&7 == == == == &3&l&nHypoxia &7== == == ==%nl%&bA land with no natural laws.%nl%Mutated monsters will attack at night.%nl%Unique resources and items to create.%nl%&cWatch your back.%nl%&bAnd don't forget to have fun!"
+			else:
+				send "&cFailed to find a suitable location. Please try again." to player
+
+function raycastFromSkyDownward(l: location, offset: number, height: number) :: location:
+	set {_x} to random number between {_offset} and {_offset} * -1
+	set {_y} to random number between {_offset} and {_offset} * -1
+	set {_l} to location 10 blocks above and {_x} blocks west and {_y} blocks south {_l}
+	loop {_height} * 2 times:
+		if block below {_l} is air:
+			set {_l} to location 1 block below {_l}
+	return {_l}

@@ -1,0 +1,4 @@
+on load:
+    delete all boss bars
+    clear {te::*}
+    clear {tr::player::%indexes of {tr::player::*}%::manaTick}

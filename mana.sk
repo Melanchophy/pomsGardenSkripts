@@ -1,0 +1,46 @@
+on join:
+	#This fixes the mana of a player, preventing mana overflow
+	set {te::player::%player's uuid%::maxMana} to 10 + {tr::player::%player's uuid%::magicBalls}
+
+	#Due to the way the "on armor change" event works, i need to set these variables to their original stats (same applies for max mana)
+	set {te::player::%player's uuid%::manaRegen} to 1
+	set {te::player::%player's uuid%::manaReduction} to 0
+	set {te::player::%player's uuid%::manaDamageRaw} to 0
+	set {te::player::%player's uuid%::manaDamagePercent} to 0
+	clear {te::player::%player's uuid%::setbonus}
+	
+	#Just need to keep this in reload order so it doesn't break
+	addArmourStats(player, custom model data of {tr::player::%player's uuid%::trinket}, 1)
+
+	wait 1 tick
+	set {_progress} to {te::player::%player's uuid%::mana}/{te::player::%player's uuid%::maxMana}*100
+	set {te::player::%player's uuid%::manabar} to bossbar named "playerMana.%Player%" with title "&bMana [%{te::player::%player's uuid%::mana}%/%{te::player::%player's uuid%::maxMana}%]" with color blue with style segmented 10 with progress {_progress}
+
+	set bossbar players of {te::player::%player's uuid%::manabar} to player
+	if {tr::player::%player%::manaTick} is not set:
+		set {tr::player::%player%::manaTick} to true
+		while player is online:
+			if {te::player::%player's uuid%::mana} < {te::player::%player's uuid%::maxmana}:
+				manaChange(player, {te::player::%player's uuid%::manaRegen})
+			wait 2 seconds
+		delete {te::player::%player's uuid%::manabar} 
+	clear {tr::player::%player%::manaTick}
+
+function manaChange(p: player, n: number):
+	if {te::player::%{_p}'s uuid%::mana} + {_n} >= {te::player::%{_p}'s uuid%::maxmana}:
+		set {te::player::%{_p}'s uuid%::mana} to {te::player::%{_p}'s uuid%::maxmana}
+	else:
+		add {_n} to {te::player::%{_p}'s uuid%::mana}
+	updateManabar({_p})
+
+function manaConsume(p: player, n: number) :: boolean:
+	set {_n} to {_n} - ({_n} * {te::player::%{_p}'s uuid%::manaReduction})
+	if {_n} < 0:
+		set {_n} to 0
+	if {te::player::%{_p}'s uuid%::mana} >= {_n}:
+		manaChange({_p}, {_n}*-1)
+		return true
+
+function updateManabar(p: player):
+	set bossbar progress of {te::player::%{_P}'s uuid%::manabar} to {te::player::%{_p}'s uuid%::mana}/{te::player::%{_p}'s uuid%::maxMana}*100
+	set bossbar title of {te::player::%{_P}'s uuid%::manabar} to "&bMana [%floor({te::player::%{_p}'s uuid%::mana})%/%{te::player::%{_p}'s uuid%::maxMana}%]"

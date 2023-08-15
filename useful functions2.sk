@@ -1,0 +1,35 @@
+function particleLine(l1: location, l2: location, particle: particle, dens: number):
+	set {_particleLoc} to {_l1}
+	
+	draw 1 {_particle} at {_particleLoc} with extra 0 to all players
+
+	set {_blocks} to distance between {_l1} and {_l2}
+	set {_loops} to floor({_blocks} * {_dens})
+	
+	set {_blocks} to {_blocks} / ({_blocks}*{_dens})
+	
+	set yaw of {_particleLoc} to atan2({_l2}'s x-coord - {_l1}'s x-coord, {_l2}'s z-coord - {_l1}'s z-coord) - 90
+
+	set {_adj} to sqrt(({_l2}'s x-coord - {_l1}'s x-coord)^2 + ({_l2}'s z-coord - {_l1}'s z-coord)^2)
+	set pitch of {_particleLoc} to atan2({_adj}, {_l2}'s y-coord - {_l1}'s y-coord) * -1
+	
+	loop {_loops} times:
+		set {_particleLoc} to location {_blocks} blocks in front of {_particleLoc}
+		draw 1 {_particle} at {_particleLoc} with extra 0 to all players
+
+
+function abilityDamage(e: entity, d: number) :: number:
+	return ({_d} + {te::player::%{_e}'s uuid%::manaDamageRaw}) * (1 + {te::player::%{_e}'s uuid%::manaDamagePercent})
+
+
+function raycastFromPlayer(p: player, range: number) :: entity:
+    set {_te} to {_p}'s target entity
+    if distance between {_p} and {_te} is less than {_range}:
+        if damageCheck({_p}, {_te}) is true:
+            return {_te}
+#used for 'wand' weapons mostly, if you know how they work 
+
+#an example use:
+#set {_l} to raycastFromPlayer(player, 6.5)
+#if {_l} is not set:
+#	set {_l} to location 6.5 blocks in front of player
