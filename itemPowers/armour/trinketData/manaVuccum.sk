@@ -1,0 +1,5 @@
+on load:
+    set {_cmd} to 70
+    set {tr::item::%{_cmd}%::trinket} to true
+    set {tr::item::%{_cmd}%::manaregen} to 1
+    set {tr::item::%{_cmd}%::manaReduction} to 0.25

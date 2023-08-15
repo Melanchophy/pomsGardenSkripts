@@ -1,0 +1,282 @@
+on spawn of entity:
+    if event-world is "spawn":
+        wait 1 ticks
+        set {_n} to uncolored name of event-entity
+        if {_n} is "jamoth":
+            set {_loc1} to {tr::boss::%{_n}%::ArenaLoc1}
+            set {_loc2} to {tr::boss::%{_n}%::ArenaLoc2}
+            wait 1 seconds
+            set {_v::1} to vector(0, 3, 14)
+            set {_v::2} to vector(0, 3, -14)
+            set {_v::3} to vector(14, 3, 0)
+            set {_v::4} to vector(-14, 3, 0)
+            set {te::boss::%{_n}%::phase} to 1
+            while event-entity is alive:
+                add 1 to {_bossLoop}
+                #Phase 1
+                if {te::boss::%{_n}%::phase} is 1:
+                    rotate {_v::*} around y-axis by sqrt(event-entity's health / event-entity's max health) * -45 + 55
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        play sound "entity.generic.extinguish_fire" with volume 0.2 at loop-player for loop-player
+                    loop 4 times:
+                        set {_l::%loop-value%} to location of event-entity ~ {_v::%loop-value%}
+                        particleLine(event-entity, {_l::%loop-value%}, flame, 6)
+                    set {_wait} to "%ceil((event-entity's health/event-entity's max health) * 18)% ticks" parsed as timespan
+                    wait {_wait}
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        play sound "entity.generic.explode" with volume 0.4 with pitch 1.4 at loop-player for loop-player
+                    loop 4 times:
+                        particleLineDamage(event-entity, {_l::%loop-value%}, explosion, 0.6, event-entity, 10, 2)
+                        make 1 explosion_emitter at {_l::%loop-value%}
+                        loop entities in radius 3 of {_l::%loop-value%}:
+                            make event-entity damage loop-entity by 20
+                    if {_bossLoop} is 9:
+                        mindMite(event-entity)
+                    else if {_bossLoop} is 12 or 24:
+                        jamothDrag(event-entity, {_loc1}, {_loc2})
+                    else if {_bossLoop} is greater than 23:
+                        set {_bossLoop} to 0
+                else if {te::boss::%{_n}%::phase} is 2:
+                    if cooldown(event-entity, "beginPhase2", 0 seconds) is true:
+                        if event-entity's health is less than 550:
+                            if cooldown(event-entity, "arenaFlame", 5 second) is true:
+                                add 1 to {_nerd}
+                                jamothArenaFlame(event-entity, {_nerd})
+                                if {_nerd} is greater than 4:
+                                    set {_nerd} to 0
+                        else if cooldown(event-entity, "arenaflame", 10 seconds) is true:
+                            jamothArenaFlame(event-entity, random number between 1 and 4)
+                        if {_bossLoop} is less than 4:
+                            if cooldown(event-entity, "peeping", 10 seconds) is true:
+                                loop 3 times:
+                                    if cooldown(event-entity, "beginPhase3", 0 seconds) is true:
+                                        peeping(event-entity, 2)
+                                        wait 50 ticks
+                        if {_bossLoop} is greater than 10:
+                            set {_bossLoop} to 0
+                else if {te::boss::%{_n}%::phase} is 3:
+                    if cooldown(event-entity, "beginPhase3", 0 seconds) is true:
+                        loop players where [input's location is within {_loc1} and {_loc2}]:
+                            apply wither 1 to loop-player for 3 seconds replacing existing effect
+                            peeping(event-entity, 3)
+                            wait 35 ticks
+                
+                #Is boss alive?
+                loop 1 times:
+                    wait 2 ticks
+                    if event-entity is not alive:
+                        exit loop
+            clear {te::boss::%{_n}%::*}
+            clear {te::boss::%{_n}%}
+
+function jamothDrag(e: entity, loc1: location, loc2: location):
+    particleArc(location 1.5 blocks below {_e}'s head, 0, 1, 15, 1 tick, 24, 1, wax off, -40)
+    play sound "entity.spider.ambient" in voice category with pitch 1.6 at {_e}
+    wait 5 ticks
+    particleArc(location 1 blocks below {_e}'s head, 0, 1, 15, 1 tick, 24, 1, wax off, -40)
+    wait 10 ticks
+    loop players where [input's location is within {_loc1} and {_loc2}]:
+        set loop-player's velocity to vector(0, 1, 0)
+        play sound "entity.arrow.hit" in voice category with pitch 1.1 for loop-player at {_tbl}
+        wait 10 ticks
+        loop 8 times:
+            set {_dist} to distance between loop-player and {_e}
+            set {_v} to vector between loop-player and {_e}
+            push loop-player {_v} at speed sqrt({_dist})/24
+            wait 2 ticks
+
+function jamothArenaFlame(e: entity, n: number):
+    set {_v1} to vector 9, 0, 9
+    set {_v2} to vector -9, 0, 9
+    rotate {_v1} around vector 0, 1, 0 by {_n}*90
+    rotate {_v2} around vector 0, 1, 0 by {_n}*90
+    set {_loc1} to location(2000,53,3000,"spawn") ~ {_v1}
+    set {_loc2} to location(2000,43,3000,"spawn") ~ {_v2}
+
+    if {_n} is 1:
+        set {_isX} to -1
+    else if {_n} is 2:
+        set {_isZ} to 1
+    else if {_n} is 3:
+        set {_isX} to 1
+    else if {_n} is 4:
+        set {_isZ} to -1
+    play sound "item.axe.wax_off" at {_e}
+    play sound "entity.blaze.shoot" at {_e}
+    wait 2 ticks
+    play sound "item.axe.wax_off" with pitch 0.7 at {_e}
+    loop 14 times:
+        add {_isX} to {_loc2}'s x-coord
+        add {_isZ} to {_loc2}'s z-coord
+        loop sqrt(loop-value)*20 times:
+            set {_x} to random number between {_loc1}'s x-coord and {_loc2}'s x-coord
+            set {_y} to random number between {_loc1}'s y-coord and {_loc2}'s y-coord
+            set {_z} to random number between {_loc1}'s z-coord and {_loc2}'s z-coord
+            add location({_x}, {_y}, {_z}, world "spawn") to {_particleLoc::*}
+        draw 1 of dust using dustOption(gray, 3) at {_particleLoc::*}
+        play sound "entity.blaze.hurt" with volume 0.2 with pitch 0.7 at {_e}
+        wait 4 ticks
+        loop players where [input's location is within {_loc1} and {_loc2}]:
+            apply nausea 10 without particles to loop-player for 0.5 seconds replacing existing effect
+    play sound "entity.blaze.death" with volume 0.4 with pitch 0.7 at {_e}
+    loop 120 times:
+        set {_x} to random number between {_loc1}'s x-coord and {_loc2}'s x-coord
+        set {_y} to random number between {_loc1}'s y-coord and {_loc2}'s y-coord
+        set {_z} to random number between {_loc1}'s z-coord and {_loc2}'s z-coord
+        add location({_x}, {_y}, {_z}, world "spawn") to {_particleLoc::*}
+    draw 1 of dust using dustOption(red, 3) at {_particleLoc::*}
+    play sound "entity.player.attack.crit" at {_e}
+    loop players where [input's location is within {_loc1} and {_loc2}]:
+        set loop-player's health to 0.5
+        make {_e} damage loop-player by 0.1
+
+
+    
+
+function peeping(e: entity, phase: int):
+    set {_teP} to nearest player at location(2000.5,54.5,3000.5,"spawn")
+    send title "&c" with subtitle "&c⏿" to {_tep}
+    if {_phase} is 2:
+        set {_location} to location(2000.5,54.5,3000.5,"spawn")
+    else:
+        set {_location} to location(2000.5,83.5,3000.5,"spawn")
+    particleLine({_location}, {_teP}, flame, 6)
+    set {_tepLoc} to location of {_tep}
+    play sound "item.trident.thunder" at {_tepLoc}
+    wait 30 ticks
+    send title "&7" with subtitle "&7⏿" to {_tep}
+    particleLine({_location}, {_tepLoc}, explosion, 0.6)
+    make 1 explosion_emitter at {_tepLoc}
+    play sound "entity.generic.explode" at {_tepLoc}
+    loop players in radius 4 of {_tepLoc}:
+        set {_d} to loop-player's health - (loop-player's max health * 0.6)
+        if {_d} is less than loop-player's health:
+            make {_e} damage loop-entity by 30
+        else:
+            make {_e} damage loop-entity by 1000
+
+
+function mindMite(e: entity):
+    set block data of block at location(2000.5,2.50,3000.5,world "spawn") to light[level=15;waterlogged=false]
+    set block at location(2000.5,1.50,3000.5,world "spawn") to redstone block
+    play sound "entity.ender_dragon.growl" at {_e}
+    wait 5 ticks
+    loop 12 times:
+        spawn endermite at {_e} with nbt from "{Lifetime:200,Invulnerable:1b,CustomName:'[{""text"":""Mind Mite"",""color"":""red""}]',Health:10,Rotation:[%loop-value * 30%f],Attributes:[{Name:""generic.max_health"",Base:10f}]}"
+        add last spawned endermite to {_mites::*}
+        push last spawned endermite upwards at speed 0.8
+        push last spawned endermite in direction of last spawned endermite at speed 1.6
+        wait 2 ticks
+    wait 180 ticks
+    kill {_mites::*}
+    set block at location(2000.5,2.50,3000.5, world "spawn") to air
+    set block at location(2000.5,1.50,3000.5, world "spawn") to black concrete
+
+
+        
+
+on damage:
+    if event-world is "spawn":
+        if uncolored name of victim is "Jamoth":
+            set {_n} to uncolored name of victim
+            set {_loc1} to {tr::boss::%{_n}%::ArenaLoc1}
+            set {_loc2} to {tr::boss::%{_n}%::ArenaLoc2}
+
+            #Invulnerable during phase swapping
+            if {te::boss::%{_n}%::canDamage} is false:
+                cancel event
+                play sound "entity.guardian.death_land" at attacker for attacker
+                make victim damage attacker by 10
+            
+            #Phase 1
+            else if {te::boss::%{_n}%::phase} is 1:
+                if (victim's health - damage) / victim's max health * 100 is less than 55:
+                    cancel event
+                    set victim's health to victim's max health *0.5
+                    set {te::boss::%{_n}%::canDamage} to false
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        send "&cYour consciousness dwindles..." to loop-player
+                    play sound "entity.enderman.stare" at victim
+                    play sound "entity.enderman.hurt" at victim
+                    
+                    wait 180 ticks
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        teleport loop-player to location(2000.5, -15.00, 3001.5, world "spawn")
+                        damage loop-player by 0.1
+                        set loop-player's health to loop-player's max health * 0.1
+                        set loop-player's absorption amount to 0
+                        send title "&f" with subtitle "&cThe Arena Closes In" to loop-player
+                        play sound "entity.player.attack.crit" with volume 2 with pitch 1 at loop-player
+                    set {te::boss::%{_n}%::phase} to 2
+                    cooldown(victim, "beginPhase2", 7 seconds)
+                    wait 100 ticks
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        teleport loop-player to location(2000.5, 44.00, 2992.5, world "spawn")
+                        damage loop-player by 0.1
+                        set loop-player's health to loop-player's max health * 0.1
+                        set loop-player's absorption amount to 0
+                        play sound "entity.player.attack.crit" with volume 2 with pitch 1 at loop-player
+
+                    teleport victim to location(2000.5,44.00,3000.5,world "spawn",-90) 
+
+                    clear {te::boss::%{_n}%::canDamage}
+
+            #Phase 2
+            else if {te::boss::%{_n}%::phase} is 2:
+                if (victim's health - damage) / victim's max health * 100 is less than 20:
+                    cancel event
+                    set victim's health to victim's max health *0.2
+                    set {te::boss::%{_n}%::canDamage} to false
+
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        send "&cYour consciousness dwindles..." to loop-player
+                    play sound "entity.enderman.hurt" at victim
+                    play sound "entity.enderman.stare" at victim
+                    wait 180 ticks
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        teleport loop-player to location(2000.5, -15.00, 3001.5, world "spawn")
+                        damage loop-player by 0.1
+                        set loop-player's health to loop-player's max health * 0.1
+                        set loop-player's absorption amount to 0
+                        send title "&f" with subtitle "&cThe Arena Closes In" to loop-player
+                        play sound "entity.player.attack.crit" with volume 2 with pitch 1 at loop-player
+                
+                    set {te::boss::%{_n}%::phase} to 3
+                    cooldown(victim, "beginPhase3", 8 seconds)
+                    wait 100 ticks
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        teleport loop-player to location(2000.5,80.00,2995.5, world "spawn")
+                        damage loop-player by 0.1
+                        set loop-player's health to loop-player's max health * 0.1
+                        set loop-player's absorption amount to 0
+                        play sound "entity.player.attack.crit" with volume 2 with pitch 1 at loop-player
+
+                    teleport victim to location(2000.5,80.00,3000.5,world "spawn",-90) 
+                    
+                    clear {te::boss::%{_n}%::canDamage}
+
+
+
+
+function particleLineDamage(l1: location, l2: location, particle: particle, dens: number, entity: entity, damage: number, radius: number):
+	set {_particleLoc} to {_l1}
+	
+	draw 1 {_particle} at {_particleLoc} with extra 0 to all players
+
+	set {_blocks} to distance between {_l1} and {_l2}
+	set {_loops} to floor({_blocks} * {_dens})
+	
+	set {_blocks} to {_blocks} / ({_blocks}*{_dens})
+	
+	set yaw of {_particleLoc} to atan2({_l2}'s x-coord - {_l1}'s x-coord, {_l2}'s z-coord - {_l1}'s z-coord) - 90
+
+	set {_adj} to sqrt(({_l2}'s x-coord - {_l1}'s x-coord)^2 + ({_l2}'s z-coord - {_l1}'s z-coord)^2)
+	set pitch of {_particleLoc} to atan2({_adj}, {_l2}'s y-coord - {_l1}'s y-coord) * -1
+	
+	loop {_loops} times:
+		set {_particleLoc} to location {_blocks} blocks in front of {_particleLoc}
+		draw 1 {_particle} at {_particleLoc} with extra 0 to all players
+
+		loop all entities in radius {_radius} of {_particleLoc}:
+			if damageCheck({_entity}, loop-entity) is true:
+				make {_entity} damage loop-entity by {_damage}

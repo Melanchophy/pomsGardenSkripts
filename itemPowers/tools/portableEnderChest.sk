@@ -1,0 +1,3 @@
+on block place:
+    if custom model data of player's tool is 65:
+        show player's ender chest to player

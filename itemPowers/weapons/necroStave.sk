@@ -1,0 +1,34 @@
+on right click:
+    if custom model data of player's tool is 40:
+        if cooldown(player, "shock", 0.6 seconds) is true:
+            if manaConsume(player, 3) is true:
+                play sound "entity.player.breath" with volume 0.8 at player
+                play sound "entity.generic.explode" with volume 0.7 at player
+                set {_l} to location 0.5 block above player
+                loop all entities in radius 3 of location {_l}:
+                    if damageCheck(player, loop-entity) is true:
+                        make player damage loop-entity by abilityDamage(player, 20)
+                loop 24 times:
+                    set {_v} to spherical vector radius 2, yaw (loop-value * 15), pitch 0
+                    chance of 50%:
+                        draw 1 electric spark at {_l} ~ {_v} with extra 0.0 to all players
+                    else:
+                        draw 1 wax off at {_l} ~ {_v} with extra 0.0 to all players
+                wait 1 tick
+                set {_l} to location 1.2 block above player
+                loop 10 times:
+                    loop 20 times:
+                        set {_v} to spherical vector radius 1, yaw player's yaw - 90 + (loop-value-2 * 9), pitch 0
+                        rotate {_v} around vector cos(player's yaw), 0, sin(player's yaw) by player's pitch + random number between -5 and 5
+                        draw 1 crit at {_l} ~ {_v} with extra 0.0 to all players
+
+                    loop all entities in radius 1.4 of location 1 block below {_l}:
+                        if {_tagged::*} does not contain loop-entity:
+                            add loop-entity to {_tagged::*}
+                            if damageCheck(player, loop-entity) is true:
+                                make player damage loop-entity by abilityDamage(player, 12)
+                                if loop-entity is not a player:
+                                    stunned(loop-entity, 0.4 seconds, true)
+                                    
+
+                    set {_l} to location 1 blocks in front of {_l}

@@ -1,0 +1,44 @@
+#Plant Models
+on load:
+	set {_cmd} to 85
+	clear {tr::plant::%{_cmd}%}
+	clear {tr::plant::%{_cmd}%::*}
+	set {tr::plant::%{_cmd}%} to oak sapling
+	set {tr::plant::%{_cmd}%::minTimeS} to 80
+	set {tr::plant::%{_cmd}%::maxTimeS} to 200
+	set {tr::plant::%{_cmd}%::fruit} to player skull named "&fStrawberry" with lore "&8&oThe only berry :3" with custom model data 86 with nbt compound from "{SkullOwner:{Id:[I;84,-1453178151,-1819908436,-842857871],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2JjODI2YWFhZmI4ZGJmNjc4ODFlNjg5NDQ0MTRmMTM5ODUwNjRhM2Y4ZjA0NGQ4ZWRmYjQ0NDNlNzZiYSJ9fX0=""}]}}}"
+	
+	clear {tr::plantModel::%{_cmd}%::*}
+	set {_ID} to 1
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to oak log
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 1, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to spruce leaves
+    
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 0, 1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to spruce leaves
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 0, -1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to spruce leaves
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(1, 0, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to spruce leaves
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-1, 0, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to spruce leaves
+
+
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-1, 1, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to player head
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::BlockHeadNBT} to nbt compound from "{SkullOwner:{Id:[I;%{_cmd}%,-1453178151,-1819908436,-842857871],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWY2NDgxYzU1ZmZhM2MxOGZkMzU5OTc4NDM0Zjg1OTgxMTE4Y2U2OGZjN2UyZGJkY2U1MDg1YTkxZDhlNTRkNyJ9fX0=""}]}}}"
+
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(1, 0, 1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to player head
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::BlockHeadNBT} to nbt compound from "{SkullOwner:{Id:[I;%{_cmd}%,-1453178151,-1819908436,-842857871],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWY2NDgxYzU1ZmZhM2MxOGZkMzU5OTc4NDM0Zjg1OTgxMTE4Y2U2OGZjN2UyZGJkY2U1MDg1YTkxZDhlNTRkNyJ9fX0=""}]}}}"

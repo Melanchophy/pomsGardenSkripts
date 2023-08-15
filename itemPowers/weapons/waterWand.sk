@@ -1,0 +1,20 @@
+on right click:
+    if custom model data of player's tool is 38:
+        if cooldown(player, "water bolt", 2 seconds) is true:
+            if manaConsume(player, 2) is true:
+                set {_l.1} to location of player
+                play sound "entity.player.splash.high_speed" at {_l.1}
+                loop 20 times:
+                    play sound "entity.fish.swim" with volume 0.1 at {_l.%loop-value%}
+                    loop all monsters in radius 2.5 of {_l.%loop-value%}:
+                        if {_tagged::*} does not contain loop-monster:
+                            apply slowness 3 to loop-monster for 3 seconds
+                            play sound "entity.player.hurt_drown" at loop-monster
+                            make player damage loop-monster by abilityDamage(player, 8)
+                            add loop-monster to {_tagged::*}
+                    set {_l.%loop-value+1%} to location 0.5 block in front of {_l.%loop-value%}
+                    particleLine(location 1 block above {_l.%loop-value+1%}, location 1 block above {_l.%loop-value%}, dripping_water, 4)
+                    loop 4 times:
+                        particleArc(location 1 block above {_l.%loop-value-1%}, random number between 0 and 90, 1, 10, 1 tick, 72, 2, splash, -120 + (loop-value-2 * 30))
+
+                    wait 1 tick

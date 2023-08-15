@@ -1,0 +1,38 @@
+on armor change:
+    if custom model data of event-item is 84:
+        while custom model data of helmet of player is 84:
+            allStar(player, 1 second, true)
+            wait 5 tick
+
+on damage of player:
+	if custom model data of victim's helmet is 84:
+		if attacker is set:
+			if cooldown(victim, "shrekHurt", 3 seconds) is true:
+				play sound "entity.sniffer.death" with volume 2 with pitch 0.5 at victim
+				set {_l} to location 1 block below victim's head
+				
+				loop 3 times:
+					loop 15*loop-value times:
+						set {_v} to spherical vector radius loop-value-1, yaw (loop-value-2*24), pitch 0
+						draw 1 of dust_color_transition using dustTransition(black, lime, 3) at {_l} ~ {_v}
+					wait 2 ticks
+
+			
+
+function allStar(e: entity, t: timespan, set: boolean):
+	if setEffect({_e}, {_t}, {_set}, "allStar") is true:
+		set {_l} to location of {_e}
+		while now < {te::%{_e}%::effects::allStar}:
+			if {_e}'s health is greater than 0:
+				chance of 10%:
+					play sound "entity.warden.agitated" at {_e}
+					wait 10 tick
+					draw 4 of dust_color_transition using dustTransition(black, lime, 3) at location 1 block below {_e}'s head
+				else:
+					wait 10 ticks
+				wait 10 ticks
+			else:
+				exit loop
+
+on load:
+	set {tr::effect::allStar::color} to "&a"

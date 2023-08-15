@@ -1,0 +1,10 @@
+on damage of player:
+    if custom model data of victim's helmet is 54:
+        if cooldown(victim, "kaboom", 10 seconds) is true:
+            play huge explosion at victim
+            loop entities in radius 4 of victim:
+                if loop-entity is not victim:
+                    if loop-entity is attacker:
+                        make victim damage loop-entity by 20
+                    else:
+                        make victim damage loop-entity by 14

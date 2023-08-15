@@ -1,0 +1,61 @@
+command /sethome <string>:
+	cooldown: 10 seconds
+	cooldown message: &c> Please wait %remaining time% before using this command again.
+	trigger:
+		if player's world is not "spawn":
+			if number of indices of {tr::player::%player's uuid%::home::*} is not greater than or equal to 10:
+				if length of arg-1 is less than 25:
+					set {tr::player::%player's uuid%::home::%arg-1%} to player's location
+					send "&7> Set your home ""%arg-1%"" to this location."
+				else:
+					send "&c> Your home's name is too long."
+			else:
+				send "&c> Sorry, you have too many homes. The limit is 10. Please make efficient use of these slots."
+		else:
+			send "&c> You can't send a home in Poms Garden."
+
+command /home <string>:
+	cooldown: 3 seconds
+	cooldown message: &c> Please wait %remaining time% before using this command again.
+	trigger:
+		if {tr::player::%player's uuid%::home::%arg-1%} is set:
+			teleport(player, {tr::player::%player's uuid%::home::%arg-1%})
+		else:
+			send "&c> Sorry that home does not exist. To view your current homes do /homes"
+
+on tab complete of "/home":
+	set tab completions for position 1 to indexes of {tr::player::%player's uuid%::home::*}
+
+
+command /homes:
+	cooldown: 1 seconds
+	cooldown message: &c> Please wait %remaining time% before using this command again.
+	trigger:
+		if {tr::player::%player's uuid%::home::*} is set:
+			send "&7> Your homes are: %indexes of {tr::player::%player's uuid%::home::*}%"
+		else:
+			send "&c> You don't have any homes."
+
+command /delhome <string>:
+	trigger:
+		if {tr::player::%player's uuid%::home::%arg-1%} exists:
+			send "&7> Deleted the home ""%arg-1%"" at %{tr::player::%player's uuid%::home::%arg-1%}%"
+			clear {tr::player::%player's uuid%::home::%arg-1%}
+		else:
+			send "&c> This home does not exist."
+
+on tab complete of "/delhome":
+	set tab completions for position 1 to indexes of {tr::player::%player's uuid%::home::*}
+
+
+function teleport(p: player, l: location):
+	hide {_p} from all players
+	send action bar "&fTeleporting!" to {_p}
+	wait 4 tick
+	teleport {_p} to {_l}
+	reveal {_p} to all players
+
+command /help:
+	trigger:
+		send "Useful Commands:%nl%/spawn, /sethome, /home, /delhome%nl%/recipes"
+

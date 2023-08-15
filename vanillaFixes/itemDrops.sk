@@ -1,0 +1,25 @@
+on death:
+	if victim is player:
+		
+		if victim's level is greater than 30:
+			if victim's level is greater than 34:
+				set {_lvlRed} to 5
+			else:
+				set {_lvlRed} to victim's level -30
+
+			reduce the victim's level by {_lvlRed}
+			send title "&c☠" with subtitle "&7-%{_lvlRed}% Lvls" to victim
+		else:
+			send title "&c☠" to victim
+		wait 0.5 seconds
+		if world of victim is not "spawn":
+			send "&4> &cDeath Coords... %vector of victim%" to victim
+			if attacker is not player:
+				if damage cause is not block explosion or the void or entity explosion:
+					loop items in victim's inventory:
+						loop-item is not pickaxe or axe or hoe or shovel or shulker box or shield or bow or sword or helmet or chestplate or leggings or boots or elytra OR TRIDENT:
+							if custom model data of loop-item is 0:
+								drop loop-item at location of victim
+								remove loop-item from victim's inventory
+
+		

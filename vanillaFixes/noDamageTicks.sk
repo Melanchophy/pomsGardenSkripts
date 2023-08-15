@@ -1,0 +1,21 @@
+on damage of entity:
+    le spawn text display random number between 0.2 and 0.7 meter above victim's head
+    set {_d} to last spawned entity
+
+    if attacker is set:
+        set display left rotation of {_d} to quaternion(0,cos(attacker's yaw/2),0,sin(attacker's yaw/2))
+    else:  
+        set display left rotation of {_d} to quaternion(0,cos(victim's yaw/2),0,sin(victim's yaw/2))
+    
+    set damage to damage * (1 - {te::player::%victim's uuid%::damageReduction})
+    if damage cause is attack, sweep attack, projectile, poison, potion, wither, thorns, block explosion or entity explosion:
+        wait 1 tick
+        set victim's invulnerability ticks to 1
+
+    set display text of {_d} to "&c|||&4&l%Final Damage*2%&c|||"
+    wait 5 ticks
+    set display text of {_d} to "&c||&4&l%Final Damage*2%&c||"
+    wait 5 ticks
+    set display text of {_d} to "&c|&4&l%Final Damage*2%&c|"
+    wait 5 ticks
+    kill {_d}

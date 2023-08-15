@@ -1,0 +1,108 @@
+on region enter:
+	set {_r::*} to "%event-region%" split at " "
+	set {_r} to {_r::1}
+	
+	#FIRST ENTER
+	if {tr::regions::%{_r}%::discoverMessage} is set:
+		if {tr::player::%player's uuid%::regions::%{_r}%::firstEnter} is not set:
+			set {tr::player::%player's uuid%::regions::%{_r}%::firstEnter} to true
+			send "%nl%&7[====---- %{tr::regions::%{_r}%::name}%&7 ----====]%nl%%nl%&r%{tr::regions::%{_r}%::discoverMessage}%%nl%" to player
+			wait 1 tick
+			play sound "%{tr::regions::%{_r}%::discoverSound}%" at player for player
+	
+	#CONTINIOUS
+	
+	#Teleport and sound
+	if {tr::regions::%{_r}%::tp} is set:
+		teleport player to {tr::regions::%{_r}%::tp}
+		if {tr::regions::%{_r}%::enterSound} is set:
+			play sound "%{tr::regions::%{_r}%::enterSound}%" at {tr::regions::%{_r}%::tp} for player
+	
+	else if {tr::regions::%{_r}%::enterSound} is set:
+		play sound "%{tr::regions::%{_r}%::enterSound}%" at player for player
+	
+	else if {_r} is "boss4Pit":
+		set {_jam} to nearest iron golem at player
+		if uncolored name of {_jam} is "Jamoth":
+			if player's gamemode is not creative or spectator:
+				push player up at speed 1
+				while player is not on ground:
+					make {_jam} damage player by 8
+					add 1 to {_num}
+					if {_num} is greater than 20:
+						exit loop
+					wait 2 ticks
+		else:
+			push player up at speed 2
+		
+	#DEBUG
+	if {te::%Player's uuid%::regiondebug} is true:
+		send "%nl%&7Region name '%{_r}%'%nl%"
+	
+	#SPECIAL CASES:
+	if {_r} is "reception":
+		bossBarrier(player)
+
+on join:
+	set {_regions::*} to regions at player
+	loop {_regions::*}:
+		set {_r::%loop-value%::*} to "%loop-value%" split at " "
+		set {_r::%loop-value%} to {_r::%loop-value%::1}
+
+	loop {_r::*}:
+		if {tr::regions::%loop-value%::restricted} is set:	
+			teleport player to location(0.50, 0.00, 0.50, world "spawn")
+			wait 3 seconds
+			play sound "block.note_block.pling" with volume 2 with pitch 0.2 at player for player
+			send "&4&l>&c You had disconnected during an event, you are now back in spawn."
+
+on load:
+
+		#Format
+		#{tr::regions::%Name%::%Attribute%}
+	
+		#Attributes
+		#discoverMessage (sends message upon first enter)
+		#discoverSound (plays sound upon first enter)
+		#tp (teleports player to a location)
+		#enterSound (plays a sound at the player)
+	
+	clear {tr::regions::*}
+	
+	set {_r} to "BossHub"
+	set {tr::regions::%{_r}%::name} to "&6&l&nFading Facility"
+	set {tr::regions::%{_r}%::discoverMessage} to "The last place in Hypoxia where%NL%intelligible life can be found.%nl%%Nl%&7-> &nCheck into the reception."
+	set {tr::regions::%{_r}%::discoverSound} to "entity.experience_orb.pickup"
+	
+	set {_r} to "deeplabs"
+	set {tr::regions::%{_r}%::name} to "&3&l&nLamentful Labs"
+	set {tr::regions::%{_r}%::discoverMessage} to "In these labs, a scientist discovered a%NL%chemical compound with a contempt toward life.%nl%%nl%&7-> &nDefeat the abominations."
+	set {tr::regions::%{_r}%::discoverSound} to "entity.blaze.ambient"
+	
+	set {_r} to "deeplabsenterance"
+	set {tr::regions::%{_r}%::enterSound} to "block.ender_chest.open"
+	set {tr::regions::%{_r}%::tp} to location(-4.5, 2.00, 2000.5, world "spawn", 0, 0)
+
+	set {_r} to "deeplabsexit"
+	set {tr::regions::%{_r}%::enterSound} to "block.ender_chest.close"
+	set {tr::regions::%{_r}%::tp} to location(-4.5, 1.00, 1041.50, world "spawn", 180, 0)
+
+	loop 4 times:
+		set {_r} to "boss%loop-value%"
+		set {tr::regions::%{_r}%::restricted} to true
+	
+
+command /regionDebug:
+	trigger:
+		if {te::%Player's uuid%::regiondebug} is not set:
+			set {te::%Player's uuid%::regiondebug} to true
+			send "&7You will now recieve debug into for regions"
+		else:
+			clear {te::%Player's uuid%::regiondebug}
+			send "&7You will no longer recieve debug into for regions"
+
+command /resetRegionData:
+	permission: op
+	trigger:
+		clear {tr::player::%player's uuid%::regions::*}
+		send "&7&oReset all your data!"

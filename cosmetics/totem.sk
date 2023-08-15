@@ -1,0 +1,157 @@
+on right click on allay:
+	if player's world is "spawn":
+		if uncolored name of event-entity is "[NPC] Totem Spirit":
+			invSoulBites(player)
+
+command /cosmetic:
+	trigger:
+		invCosmetics(player, 1)
+
+
+on inventory click:
+	if name of player's current inventory contains "Ç":
+		cancel event
+	if "%event-inventory%" is "inventory of <none>":
+		#Soul Bites
+		if uncolored name of player's current inventory is "[Ç] Soul Bites":
+			if uncolored name of event-item is "Buy Soul Bites":
+				close player's inventory
+				send "%nl%&f[&aTotem Spirit&f] You may purchase soul bites at: <link:https://pomsgarden.tebex.io/category/2427499>&nhttps://pomsgarden.tebex.io/category/2427499%nl%<reset>&7&oThe owner needs cash for personal reasons.%nl%&7&oAnything is appriciated. <3%nl%" to player
+			else if uncolored name of event-item is "Cosmetics":
+				invCosmetics(player, 1)
+			else if uncolored name of event-item is "Sacrifice Soul Bites":
+				invSacrificeSoulBites(player)
+		
+		else if uncolored name of player's current inventory contains "[Ç] Cosmetics":
+			if uncolored name of event-item is "Cosmetics":
+				invSoulBites(player)
+			else if event-item is set:
+				if uncolored name of event-item is "%{te::player::%player%::activeCosmetic}%" or "Disable Cosmetic":
+					clear {te::player::%player%::activeCosmetic}
+					close player's inventory
+				else if event-item is not barrier block or gray stained glass pane:
+					if cooldown(player, "swapEffects", 3 second) is true:
+						applyEffect(player, uncolored name of event-item)
+						close the player's inventory
+					else:
+						send "&c> Sorry, particle swapping has a cooldown of 3 seconds."
+				
+		else if uncolored name of player's current inventory is "[Ç] Sacrifice Soul Bites":
+			if {te::player::%player%::cutscene} is not set:
+				if uncolored name of event-item contains "Owned Soul Bites":
+					invSoulBites(player)
+				else if uncolored name of event-item contains "(-1) Soul Bite Cosmetic":
+					rollSoulBite(player, 1)
+					close player's inventory
+				else if uncolored name of event-item contains "(-3) Soul Bites Cosmetic":
+					rollSoulBite(player, 3)
+					close player's inventory
+				else if uncolored name of event-item contains "(-5) Soul Bites Cosmetic":
+					rollSoulBite(player, 5)
+					close player's inventory
+
+
+function rollSoulBite(p: player, size: number):
+	if {tr::player::%{_p}'s uuid%::soulbites} is greater than or equal to {_size}:
+		set {te::player::%{_p}%::cutscene} to true
+		play sound "minecraft:block.portal.travel" with volume 0.4 at {_p}
+		loop 2 times:
+			loop 24 times:
+				particleArc({tr::location::soulTotem}, 0, 1, 15, 1 tick, 24, 1, crit, (15 * loop-value-2)+90)
+				wait 1 tick
+		play sound "entity.shulker.shoot" with volume 1.5 at {_p}
+		wait 2 ticks
+		play sound "entity.shulker.shoot" with volume 1.2 at {_p}
+		
+		set {_coz} to uncolored name of random element of {tr::cosmetics::%{_size}%::*}
+		while {tr::player::%{_p}'s uuid%::cosmetics::%{_coz}%} is true:
+			add 1 to {_loop}
+			set {_coz} to uncolored name of random element of {tr::cosmetics::%{_size}%::*}
+			if {_loop} is greater than 7:
+				send "%nl%&3> &bYou were about to recieve a duplicate... Sorry, please try again.%nl%" to {_p}
+				clear {te::player::%{_p}%::cutscene}
+				exit
+		
+		particleArc(location 0.35 blocks below {_p}'s head, 0, 1, 15, 1 tick, 24, 1, wax off, 0)
+		particleArc(location 0.35 blocks below {_p}'s head, 0, 1, 15, 1 tick, 24, 1, wax off, 40)
+		particleArc(location 0.35 blocks below {_p}'s head, 0, 1, 15, 1 tick, 24, 1, wax off, -40)
+		show flash at {_p}
+		particleArc(location 0.35 blocks below {_p}'s head, 0, 1, 15, 1 tick, 24, 1.5, soul, 0)
+		loop 25 times:
+			set {_l} to location 0.25*loop-value blocks above {_p}'s head
+			play wax off at {_l}
+			
+		send "%nl%&3> &bCongrats, you got the &f%{_coz}%&b particle effect! %nl%" to {_p}
+		set {tr::player::%{_p}'s uuid%::cosmetics::%{_coz}%} to true
+		wait 1 tick
+		if {tr::player::%{_p}'s uuid%::cosmetics::%{_coz}%} is not true:
+			set {tr::player::%{_p}'s uuid%::cosmetics::%{_coz}%} to true
+		remove {_size} from {tr::player::%{_p}'s uuid%::soulbites}
+		clear {te::player::%{_p}%::cutscene}
+
+
+
+
+
+#OPENING AN INVENTORY
+function invSoulBites(p: player):
+	open chest inventory with 3 row named "&0[Ç] Soul Bites" to {_p}
+	
+	set slot 11 of {_p}'s current inventory to ghast tear named "&bBuy Soul Bites"
+	set slot 13 of {_p}'s current inventory to nether star named "&cCosmetics"
+	set slot 15 of {_p}'s current inventory to dragon's breath named "&eSacrifice Soul Bites"
+
+#OPENING AN INVENTORY
+function invCosmetics(p: player, page: number):
+	open chest inventory with 6 row named "&0[Ç] Cosmetics" to {_p}
+	
+	set {_l} to 0
+	set {_s} to 1
+	loop 3 times:
+		loop indexes of {tr::cosmetics::%{_s}%::*}:
+			if {tr::player::%{_p}'s uuid%::cosmetics::%loop-value-2%} is set:
+				if {te::player::%{_p}%::activeCosmetic} is loop-value-2:
+					set slot {_l} of {_p}'s current inventory to green stained glass pane named "&a%loop-value-2 in proper case%"
+				else:
+					set slot {_l} of {_p}'s current inventory to {tr::cosmetics::%{_s}%::%loop-value-2%}
+				
+			else:
+				set slot {_l} of {_p}'s current inventory to barrier block named "&c[%loop-value-2 in proper case%]"
+			add 1 to {_l}
+		add 2 to {_s}
+		set slot {_l} of {_p}'s current inventory to gray stained glass pane named "&f[Seperator]"
+		add 1 to {_l}
+	#45 total slots per page
+	
+	set slot 45 of {_p}'s current inventory to end crystal named "&bCosmetics" with lore "&7<- Back"
+	loop 7 times:
+		set slot 45 + loop-number of {_p}'s current inventory to gray stained glass pane named "&f"
+	set slot 53 of {_p}'s current inventory to hopper named "&cDisable Cosmetic"
+
+	if {tr::cosmetics::1::%{te::player::%{_p}%::activeCosmetic}%} is set:
+		set slot 49 of {_p}'s current inventory to {tr::cosmetics::1::%{te::player::%{_p}%::activeCosmetic}%}
+
+	else if {tr::cosmetics::3::%{te::player::%{_p}%::activeCosmetic}%} is set:
+		set slot 49 of {_p}'s current inventory to {tr::cosmetics::3::%{te::player::%{_p}%::activeCosmetic}%}
+
+	else:
+		set slot 49 of {_p}'s current inventory to {tr::cosmetics::5::%{te::player::%{_p}%::activeCosmetic}%}
+
+
+
+#OPENING AN INVENTORY
+function invSacrificeSoulBites(p: player):
+	open chest inventory with 3 row named "&0[Ç] Sacrifice Soul Bites" to {_p}
+
+	set slot 22 of {_p}'s current inventory to end crystal named "&bOwned Soul Bites [%{tr::player::%{_p}'s uuid%::soulbites}%]" with lore "&7<- Back%nl%&8Soul bites are only used%nl%&8for buying cosmetic effects."
+	set slot 11 of {_p}'s current inventory to soul torch named "&b%{tr::player::%{_p}'s uuid%::soulbites}% (-1) Soul Bite Cosmetic" with lore "&7This will give you a%nl%&7small cosmetic effect.%nl%&7Duplicates are possible, but rare."
+	set slot 13 of {_p}'s current inventory to soul lantern named "&b%{tr::player::%{_p}'s uuid%::soulbites}% (-3) Soul Bites Cosmetic" with lore "&7This will give you a%nl%&7medium cosmetic effect.%nl%&7Duplicates are possible, but rare."
+	set slot 15 of {_p}'s current inventory to beacon named "&b%{tr::player::%{_p}'s uuid%::soulbites}% (-5) Soul Bites Cosmetic" with lore "&7This will give you a%nl%&7large cosmetic effect.%nl%&7Duplicates are possible, but rare."
+	
+	
+	
+	
+	
+	
+	
+	

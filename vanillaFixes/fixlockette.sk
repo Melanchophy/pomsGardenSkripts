@@ -1,0 +1,3 @@
+on right click on sign:
+    if line 1 of event-block is "[Private]":
+        cancel event

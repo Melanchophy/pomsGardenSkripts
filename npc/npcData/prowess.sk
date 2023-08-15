@@ -1,0 +1,7 @@
+on load:
+	set {_npc} to "Prowess"
+	clear {tr::npc::%{_NPC}%::*}
+	add "I'm not &oeven&r going to question how you got here." to {tr::npc::%{_npc}%::dialogue::*}
+	add "You probably want to visit the reception." to {tr::npc::%{_npc}%::dialogue::*}
+	add "Is a walking, talking cat not strange to you? We didn't even exist 500 years ago." to {tr::npc::%{_npc}%::dialogue::*}
+	add "I'm just out here thinking... The heat of the lava keeps us safe but, it's running out..." to {tr::npc::%{_npc}%::dialogue::*}

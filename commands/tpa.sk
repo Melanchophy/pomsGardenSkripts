@@ -1,0 +1,47 @@
+command /tpa <player>:
+	cooldown: 3 seconds
+	trigger:
+		if {te::%player%::tpa::*} exists:
+			send "%{tpaprefix}% You can't make multiple TpAsk requests, if you wish to TpAsk another player do /tpcancel"
+		else:
+			set {te::%player%::tpa::%arg-1%} to now
+			send "%{tpaPrefix}% %player% has sent you a TpAsk request. Type ""/tpaccept %player%"" to accept." to arg-1
+			send "%{tpaPrefix}% Sent a TpAsk request to %arg-1%. This will expire in 1 minute." to player
+			wait 61 seconds
+			if difference between {te::%player%::tpa::%arg-1%} and now is greater than or equal to 1 minute: 
+				clear {te::%player%::tpa::%arg-1%}
+				send "%{tpaPrefix}% Your TpAsk request to %arg-1% has expired." to player
+
+command /tpcancel:
+	trigger:
+		if {te::%player%::tpa::*} exists:
+			send "%{tpaprefix}% Your request has been cancelled"
+			clear {te::%player%::tpa::*}
+		else:
+			send "%{tpaprefix}% You do not have any TpAsk requests"
+
+command /tpaccept <player>:
+	trigger:
+		if {te::%arg-1%::tpa::%player%} is set:
+			clear {te::%arg-1%::tpa::%player%}
+			teleport(arg-1, player)
+			send "%{tpaPrefix}% %player% has accepted your TpAsk request!" to arg-1
+			send "%{tpaPrefix}% You have accepted %arg-1%'s TpAsk request." to player
+		else:
+			send "%{tpaPrefix}% You don't have any TpAsk requests from %arg-1%" to player
+
+on load:
+	set {tpaPrefix} to "&f[&aTpAsk&f]"
+
+command /tpdeny <player>:
+	trigger:
+		if {te::%arg-1%::tpa::%player%} is set:
+			clear {te::%arg-1%::tpa::%player%}
+			send "%{tpaPrefix}% %player% has denied your TpAsk request." to arg-1
+			send "%{tpaPrefix}% You have denied %arg-1%'s TpAsk request." to player
+		else:
+			send "%{tpaPrefix}% You don't have any TpAsk requests from %arg-1%" to player
+
+on load:
+	set {tpaPrefix} to "&7> "
+		

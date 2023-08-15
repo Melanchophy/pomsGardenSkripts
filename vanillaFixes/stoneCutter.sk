@@ -1,0 +1,10 @@
+command /stonecutterppcutter:
+    trigger:
+        open stonecutter inventory to player
+        set name of player's current inventory to "PP cutter"
+
+on inventory click:
+    if player's current inventory is stonecutter inventory:
+        if name of player's current inventory is "PP cutter":
+            cancel event
+            set slot 0 of player's current inventory to stone named "&fYour Rock Hard PP"

@@ -1,0 +1,28 @@
+on right click:
+    if custom model data of player's tool is 37:
+        if cooldown(player, "coddle", 8 seconds) is true:
+            if manaConsume(player, 6) is true:
+                play sound "entity.player.levelup" with volume 1.2 with pitch 0.5 at player
+                
+                loop 4 times:
+                    loop 3 times:
+                        particleArc(location 1 block above player, 0, 1, 15, 1 tick, 24, random number between 1.5 and 5, composter, -90 + (loop-value-2 * 45) + random number between 30 and -30)
+                
+                loop players in radius 5 of player:
+                    add 1 to {_players}
+                    if loop-player is not player:
+                        coddle(loop-player, 5 seconds, true)
+                heal player by player's max health / 5
+                apply absorption {_players} to player for 1 minute
+
+                loop 10 times:
+                    particleArc(location 1 block above player, random number between 0 and 15, 1, 15, 1 tick, 24, 1 + (loop-value*0.5), composter, 0)
+                    wait 2 tick
+                
+
+
+
+
+
+
+

@@ -1,0 +1,63 @@
+on load:
+	clear {tr::cosmetics::3::nyan trail::*}
+	wait 1 tick
+	add vector(0, 1.3, 0) to {tr::cosmetics::3::nyan trail::red::*}
+	add vector(0, 1.1, 0) to {tr::cosmetics::3::nyan trail::ong::*}
+	add vector(0, 0.9, 0) to {tr::cosmetics::3::nyan trail::yel::*}
+	add vector(0, 0.7, 0) to {tr::cosmetics::3::nyan trail::grn::*}
+	add vector(0, 0.5, 0) to {tr::cosmetics::3::nyan trail::blu::*}
+	add vector(0, 0.3, 0) to {tr::cosmetics::3::nyan trail::pur::*}
+
+function cosmeticApplyNyantrail(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "nyan trail":
+		set {_ploc} to {_p}'s vector
+		wait 1 ticks
+		if {_p} is not sprinting:
+			wait 3 ticks
+		draw 1 of block using block of gold at {_p} with offset vector(0.3, 0.1, 0.3) with extra 0
+		if {_ploc} is not {_p}'s vector:
+				
+			loop indexes of {tr::cosmetics::3::nyan trail::*}:
+				if {_activeVariables::%loop-value%} is not set:
+					add {tr::cosmetics::3::nyan trail::%loop-value%::*} to {_l::%loop-value%::*}
+					set {_activeVariables::%loop-value%} to true
+					
+				loop {_l::%loop-value%::*}:
+					if loop-value-1 is "red":
+						make 1 dust using dustOption(red, 1.3) at {_p}'s location ~ loop-value-2
+					else if loop-value-1 is "ong":
+						make 1 dust using dustOption(orange, 1.3) at {_p}'s location ~ loop-value-2
+					else if loop-value-1 is "yel":
+						make 1 dust using dustOption(yellow, 1.3) at {_p}'s location ~ loop-value-2
+					else if loop-value-1 is "grn":
+						make 1 dust using dustOption(green, 1.3) at {_p}'s location ~ loop-value-2
+					else if loop-value-1 is "blu":
+						make 1 dust using dustOption(blue, 1.3) at {_p}'s location ~ loop-value-2
+					else:
+						make 1 dust using dustOption(purple, 1.3) at {_p}'s location ~ loop-value-2
+
+on load:
+	clear {tr::cosmetics::3::potion mishaps::*}
+	add "white" to {tr::cosmetics::3::potion mishaps::*}
+	add "black" to {tr::cosmetics::3::potion mishaps::*}
+	add "red" to {tr::cosmetics::3::potion mishaps::*}
+	add "orange" to {tr::cosmetics::3::potion mishaps::*}
+	add "yellow" to {tr::cosmetics::3::potion mishaps::*}
+	add "green" to {tr::cosmetics::3::potion mishaps::*}
+	add "lime" to {tr::cosmetics::3::potion mishaps::*}
+	add "blue" to {tr::cosmetics::3::potion mishaps::*}
+	add "light blue" to {tr::cosmetics::3::potion mishaps::*}
+	add "purple" to {tr::cosmetics::3::potion mishaps::*}
+	add "pink" to {tr::cosmetics::3::potion mishaps::*}
+
+function cosmeticApplyPotionmishaps(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "potion mishaps":
+		make 30 item using glass at location 2 block above {_p} with offset vector(0.3, 0.4, 0.3) with extra 0
+		set {_col} to "%random element of {tr::cosmetics::3::potion mishaps::*}%" parsed as color
+		loop 45 times:
+			wait 1 ticks
+			make 1 dust using dustOption({_col}, 1.3) at location 0.7 blocks above {_p}'s head	
+		
+		
+		
+		

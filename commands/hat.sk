@@ -1,0 +1,9 @@
+command /hat:
+    trigger:
+        if player's tool is set:
+            set {_tool} to player's tool
+            set player's tool to player's helmet
+            set player's helmet to {_tool}
+            send "&7> You're now wearing an item!"
+        else:
+            send "&7> Hold an item to wear."

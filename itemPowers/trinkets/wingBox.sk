@@ -1,0 +1,30 @@
+on right click:
+    if custom model data of player's tool is 41:
+        if abilityFunc(player, 3 minutes, "bird", 10) is true:
+            play sound "entity.bat.takeoff" with volume 1.2 with pitch 0.5 at player
+                
+            bird(player, 1 minute, true)
+            set player's flight mode to true
+            set {_fs} to player's flight speed
+            set player's flight speed to 0.05
+            wait 1 tick
+            while {te::%player%::effects::Bird} is set:
+                wait 20 ticks
+                chance of 20%:
+                    play sound "entity.bat.loop" with volume 0.5 at player
+            loop 3 times:
+                play sound "entity.bat.takeoff" with volume 0.8 + (loop-value * 0.3) with pitch 0.8 at player
+                wait 10 ticks
+            set player's flight mode to false
+            set player's flight speed to {_fs}
+
+
+
+
+
+
+
+
+
+
+

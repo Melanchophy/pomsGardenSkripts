@@ -1,0 +1,13 @@
+on right click:
+    if custom model data of player's tool is 60:
+        if cooldown(player, "consume", 1 seconds) is true:
+            cancel event
+            remove 1 from item amount of player's tool
+            play sound "entity.generic.eat" at player
+            if player's hunger is 10:
+                if player's saturation is less than 5:
+                    add 2 to player's saturation
+                else if player's saturation is less than 10:
+                    add 1 to player's saturation
+            else:
+                feed player by 2

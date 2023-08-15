@@ -1,0 +1,94 @@
+on right click on grass block or dirt block:
+	if player's world is not world "spawn":
+		if {tr::plant::%custom model data of player's tool%} is set:
+			set {_cmd} to custom model data of player's tool
+			set {_l} to location of block above clicked block
+			if block at {_l} is air:
+				if block above {_l} is air:
+					set block above {_l} to structure void 
+				else:
+					exit
+				cancel event
+				remove 1 of player's tool from player's tool
+				
+				set block at {_l} to {tr::plant::%{_cmd}%}
+				add {_l} to {te::plantLocations::*}
+
+				set {te::plantTimers::%{_l}%} to random integer between {tr::plant::%{_cmd}%::minTimeS} and {tr::plant::%{_cmd}%::maxTimeS}
+				loop {te::plantTimers::%{_l}%}*5 times:
+					wait 4 ticks
+					
+					if block at {_l} is not {tr::plant::%{_cmd}%}:
+						remove {_l} from {te::plantTimers::*}
+						if block above {_l} is structure void:
+							set block above {_l} to air
+						exit
+					else if {te::plantTimers::%{_l}%} <= 0:
+						exit loop
+					
+				set block at {_l} to air
+				set block above {_l} to air
+				set {_random} to ceil(random integer between 1 and 4)
+				
+					#This is probably the most drastic change, maybe liked, maybe hated.
+					#Basically, allows us to easily change the model of the trees easier!
+					#At least, I think so. (Look below for the 'On load' event to see what I mean)
+				
+					#Loops all the points of the model we have
+				loop amount of indices of {tr::plantModel::%{_cmd}%::*} times:
+					
+					
+						#Basically checks if we have a location offset, if we have one of (0, 0, 0), the block does not set );
+					if {tr::plantModel::%{_cmd}%::%loop-number%::LocationOffset} is set:
+							#Random Rotation
+						
+						set {_locationOffset} to {tr::plantModel::%{_cmd}%::%loop-number%::LocationOffset}
+						rotate {_locationOffset} around vector 0, 1, 0 by {_random}*90
+						set {_v} to {_l} ~ {_locationOffset}
+								
+					else:
+						set {_v} to {_l}
+							
+					if block at {_v} is air:
+								
+							#With our target location, we set the block! (checking for nbt data too)	
+						if {tr::plantModel::%{_cmd}%::%loop-number%::blockHeadNBT} is set:
+							
+								#This sets the player head texture
+							set nbt-block at {_v} to {tr::plantModel::%{_cmd}%::%loop-number%::block} with nbt {tr::plantModel::%{_cmd}%::%loop-number%::blockheadNBT}
+								
+						else:
+							set block at {_v} to {tr::plantModel::%{_cmd}%::%loop-number%::block}
+				clear {te::plantTimers::%{_l}%}
+
+#Bone meal event
+on rightclick:
+	if event-block is set:
+		if player's tool is bone meal:
+			set {_l} to event-location
+			if {te::plantTimers::%{_l}%} is set:
+				cancel event
+				remove 1 from item amount of player's tool
+				
+				remove ceil({te::plantTimers::%{_l}%}/1.5) from {te::plantTimers::%{_l}%}
+				remove 2 from {te::plantTimers::%{_l}%}
+
+on player pickup of player skull:
+	set {_id} to first element of tag "SkullOwner;Id" of nbt compound of event-item
+	if {tr::plant::%{_id}%::fruit} is set:
+		delete event-dropped item
+		cancel event
+		give player item amount of event-item of {tr::plant::%{_id}%::fruit}
+
+on inventory pickup:
+	if event-item is player skull:
+		set {_id} to first element of tag "SkullOwner;Id" of nbt compound of event-item
+		if {tr::plant::%{_id}%::fruit} is set:
+			delete event-dropped item
+			cancel event
+			give item amount of event-item of {tr::plant::%{_id}%::fruit} to event-inventory
+				
+			
+
+
+	

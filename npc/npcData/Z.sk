@@ -1,0 +1,6 @@
+on right click on entity:
+	if uncolored name of targeted entity contains "[NPC] ":
+		set {_name::*} to uncolored name of targeted entity split at "[NPC] "
+		set {_npc} to 2nd element out of {_name::*}
+		wait 1 ticks
+		set {te::player::%player%::npcInteraction::%{_npc}%} to true

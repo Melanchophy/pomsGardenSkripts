@@ -1,0 +1,37 @@
+on block place:
+	if "%type of player's tool%" contains "shulker":
+		if player is not sneaking:
+			if player's gamemode is not creative:
+				if cooldown(player, "shulker", 5 minutes) is true:
+					send "&7Shift/sneak to place shulkers normally." to player
+				open inventory of event-block to player
+				set {te::%player%::sbpitem} to player's tool
+				set {te::%player%::sbp} to event-block
+				set {te::shulkerindex::%event-block%} to player
+
+on block break:
+	if {te::shulkerindex::%event-block%} is set:
+		set {te::shulkerindex::%event-block%} to "broken"
+		close inventory of {te::shulkerindex::%event-block%}
+		wait 1 tick
+		clear {te::shulkerindex::%event-block%}
+
+on right click on shulker box:
+	if {te::shulkerindex::%event-block%} is set:
+		cancel event
+		send "&cSomebody else is viewing their shulker."
+
+on inventory close:
+	if inventory type is shulker box inventory:
+		if {te::%player%::sbp} is set:
+			if player's gamemode is not creative:
+				if player's tool is air:
+					set player's tool to drops of {te::%player%::sbp} using player's tool
+				else if player's inventory has space for drops of {te::%player%::sbp} using player's tool:
+					give player drops of {te::%player%::sbp} using player's tool
+				else:
+					drop drops of {te::%player%::sbp} using player's tool at {te::%player%::sbp}
+			set block at {te::%player%::sbp} to air
+			clear {te::%player%::sbpitem}
+			clear {te::shulkerindex::%{te::%player%::sbp}%}
+			clear {te::%player%::sbp}

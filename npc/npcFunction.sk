@@ -1,0 +1,85 @@
+on right click on entity:
+	if uncolored name of targeted entity contains "[NPC] ":
+		if cooldown(player, "NpcFunction", 1.5 seconds) is true:
+			set {_name::*} to uncolored name of targeted entity split at "] "
+			set {_n} to 2nd element out of {_name::*}
+			if {tr::player::%player's uuid%::npcdialogue::%{_n}%} is not 1:
+				if {te::player::%player%::npcInteraction::%{_n}%} is not set:
+					set {te::player::%player's uuid%::npcCanProgress::%{_n}%} to false
+					set {te::player::%player%::npcInteraction::%{_n}%} to true
+			if {tr::NPC::%{_n}%::dialogue::1::1} is not set:
+				NPCtalk(player, {_n}, false)
+				if {tr::NPC::%{_n}%::shop::*} is set:
+					NPCshop(player, {_n})
+			else:
+				NPCtalk(player, {_n}, true)
+
+
+
+function NPCtalk(p: player, npc: text, progressed: boolean):
+	if {te::player::%{_p}'s uuid%::npcdialogue} is not set:
+		if {_progressed} = false:
+			set {_d} to random element out of {tr::npc::%{_npc}%::dialogue::*} where [input is not {te::player::%{_p}'s uuid%::npcdialogue::%{_npc}%}]
+			set {te::player::%{_p}'s uuid%::npcdialogue::%{_npc}%} to {_d}
+			
+		else:
+			#{tr::player::%{_p}'s uuid%::npcdialogue::%{_npc}%} declairs what block of text the player is at
+			#{te::player::%{_p}'s uuid%::npcdialogue::%{_npc}%} the line of text the player is at
+			
+			#setters
+			set {_b} to {tr::player::%{_p}'s uuid%::npcdialogue::%{_npc}%}
+			set {_l} to {te::player::%{_p}'s uuid%::npcdialogue::%{_npc}%}
+			
+			#brain
+			if {te::player::%{_p}'s uuid%::npcCanProgress::%{_npc}%} is not set:
+				if {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}+1%} is not set:
+					set {te::player::%{_p}'s uuid%::npcdialogue::%{_npc}%} to 1
+					add 1 to {tr::player::%{_p}'s uuid%::npcdialogue::%{_npc}%}
+					set {_b} to {tr::player::%{_p}'s uuid%::npcdialogue::%{_npc}%}
+					set {_l} to {te::player::%{_p}'s uuid%::npcdialogue::%{_npc}%}
+					set {_d} to {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%}
+				else:
+					add 1 to {te::player::%{_p}'s uuid%::npcdialogue::%{_npc}%}
+					set {_l} to {te::player::%{_p}'s uuid%::npcdialogue::%{_npc}%}
+					set {_d} to {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%}
+			else:
+				set {_d} to {tr::npc::%{_NPC}%::altdialogue::%{_b}%}
+			
+			#Sweets
+			#if {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::money} is set:
+			#	moneyGrant({_p}, {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::money})
+			#	set {_d} to "%{_d}%%nl%&e&o+%{tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::money}%"
+			#if {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::xp} is set:
+			#	xpGrant({_p}, {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::xp})
+			#	set {_d} to "%{_d}%%nl%&7&o+%{tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::xp}%"
+			if {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::item} is set:
+				if {tr::player::%{_p}'s uuid%::npc::items::%{_b}%::%{_l}%::item} is not set:
+					giveItem({_p}, "%{tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::item}%")
+					set {tr::player::%{_p}'s uuid%::npc::items::%{_b}%::%{_l}%::item} to true
+					set {_d} to "%{_d}%%nl%&7&o+%{tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}%::item}%"
+
+		npcDialogue({_p}, {_npc}, {_d})
+	
+
+
+function npcDialogue(p: player, npc: text, d: text):
+	if {te::player::%{_p}'s uuid%::npcdialogue} is not set:
+		remove 0.04 from {_p}'s generic movement speed attribute
+		set {te::player::%{_p}'s uuid%::npcdialogue} to true
+		
+		send "&f%nl%[&a%{_npc}%&f] %{_d}%%nl%" to {_p}
+		play sound "minecraft:entity.villager.ambient" in voice category with volume 0.8 with pitch random number between 0.9 and 1.2 at {_p} for {_p}
+		
+		wait 10 ticks
+		add 0.04 to {_p}'s generic movement speed attribute
+		clear {te::player::%{_p}'s uuid%::npcdialogue}
+
+command /resetNPCData <player>:
+	permission: op
+	trigger:
+		send "&7All NPC data for you is now reset."
+		clear {tr::player::%arg-1's uuid%::npcdialogue::*}
+		clear {te::player::%arg-1's uuid%::npcdialogue::*}
+		clear {tr::player::%arg-1's uuid%::npc::items::*}
+		clear {te::player::%arg-1%::npc::*}
+		clear {tr::%arg-1's uuid%::npc::*}

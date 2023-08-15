@@ -1,0 +1,40 @@
+function cosmeticApplyBonemeal(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Bone meal":
+		wait 6 ticks
+		particleArc(location 0.35 blocks above {_p}, random number between 0 and 90, 1, 4, 1 tick, 90, 0.5, composter, 0)
+		particleArc(location 0.7 blocks above {_p}, random number between 0 and 90, 1, 4, 1 tick, 90, 0.6, composter, 0)
+		particleArc(location 1 blocks above {_p}, random number between 0 and 90, 1, 4, 1 tick, 90, 0.5, composter, 0)
+		particleArc(location 1 blocks above {_p}, random number between 0 and 90, 1, 12, 1 tick, 30, 1, composter, 0)
+
+on load:
+	clear {tr::cosmetics::1::shoulder pixie::*}
+	add vector(0.4, 1.5, 0) to {tr::cosmetics::1::shoulder pixie::*}
+
+function cosmeticApplyShoulderpixie(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "shoulder pixie":
+		wait 1 ticks
+		if {_activeVariables} is not set:
+			add {tr::cosmetics::1::shoulder pixie::*} to {_l::*}
+			set {_activeVariables} to true
+			
+		set {_yaw} to ({_p}'s yaw - {_yaw})
+		loop {_l::*}:
+			rotate {_l::*} around y-axis by ({_yaw}*-1) / size of {_l::*}
+			make 2 dust using dustOption(yellow, 1) at {_p}'s location ~ loop-value
+		set {_yaw} to {_p}'s yaw
+
+function cosmeticApplyMinty(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Minty":
+		wait 2 ticks
+		add 5 to {_l}
+		particleArc(location 0.55 blocks above {_p}, {_l}, 1, 2, 1 tick, 180, 0.8, glow, 0)
+		if {_l} is greater than 360:
+			set {_l} to 0
+
+function cosmeticApplyDizzy(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "dizzy":
+		wait 1 ticks
+		add 3 to {_l}
+		particleArc(location 0.55 blocks above {_p}'s head, {_l}, 1, 4, 1 tick, 90, 0.8, crit, 0)
+		if {_l} is greater than 360:
+			set {_l} to 0

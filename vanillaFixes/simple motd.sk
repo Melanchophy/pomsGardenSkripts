@@ -1,0 +1,61 @@
+command /setmotd [<text>]:
+	permission: skript.setmotd
+	description: Sets the message of the day
+	trigger:
+		if arg-1 is set:
+			set {_t} to arg-1
+			replace all "&" with "§" in {_t}
+			message "&7[&fMoTD&7] &fSet the MoTD to '%{_t}%'"
+			set {motd} to {_t}
+		else:
+			clear {motd}
+			send "&7[&fMoTD&7] &fCleared the MoTD"
+
+command /showmotd:
+	description: Displays the message of the day
+	trigger:
+		message {motd}
+
+on join:
+	wait a tick
+	if {motd} is set:
+		message "%nl%&7[&fMoTD&7] &f%{motd}%%nl%"
+
+
+
+every 10 minutes:
+	if difference between {tr::randomMessages} and now is less than 10 minutes:
+		broadcast "&7[&fServer&7]&f %random element out of {tr::randomMessages::*}%"
+
+command /randomBroadcast:
+	permission: op
+	trigger:
+		broadcast "&7[&fServer&7]&f %random element out of {tr::randomMessages::*}%"
+
+on chat:
+	set {tr::randomMessages} to now
+
+on load:
+	clear {tr::randomMessages::*}
+	add "Remember to /Vote for your favourite servers!" to {tr::randomMessages::*}
+	add "Riding horses will increase your horse proficiency and make them faster!" to {tr::randomMessages::*}
+	add "You can do /Timber to test an experimental feature!" to {tr::randomMessages::*}
+	add "Is a group of sniffers is called a whiff?" to {tr::randomMessages::*}
+	add "It is %now%, please remember to take a break one in a while!" to {tr::randomMessages::*}
+	add "This server only uses 5 datapacks and 26 plugins!" to {tr::randomMessages::*}
+	add "Drink water!" to {tr::randomMessages::*}
+	add "Don't forget to OwO?" to {tr::randomMessages::*}
+	add "Python x Pygame :3" to {tr::randomMessages::*}
+	add "Also try Terraria!" to {tr::randomMessages::*}
+	add "Also try Omori!" to {tr::randomMessages::*}
+	add "Also try Wynncraft!" to {tr::randomMessages::*}
+	add "Also try Megido:Abyss!" to {tr::randomMessages::*}
+	add "I forgor what I was supposed to say." to {tr::randomMessages::*}
+	add "ooOOoo, you like kissing bricks don't you? You're a br- &7&o*a brick flies into the server and a distant voice yells ""Shut up and eat this brick!""*" to {tr::randomMessages::*}
+	add "I forgor what I was supposed to say." to {tr::randomMessages::*}
+	add "Please report any bugs in ##Bug-Reports in /Discord" to {tr::randomMessages::*}
+	add "Please add any suggestions in ##Suggestions in /Discord" to {tr::randomMessages::*}
+	add "Please report any naughty players in ##Player-Reports in /Discord" to {tr::randomMessages::*}
+
+
+

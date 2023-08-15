@@ -1,0 +1,20 @@
+on right click:
+	if custom model data of player's tool is 1:
+		cancel event
+		soulBiteAdd(player, 5)
+	else if custom model data of player's tool is 2:
+		cancel event
+		soulBiteAdd(player, 10)
+	else if custom model data of player's tool is 3:
+		cancel event
+		soulBiteAdd(player, 25)
+
+function soulBiteAdd(p: player, s: number):
+	remove 1 from item amount of {_P}'s tool
+	add {_s} to {tr::player::%{_p}'s uuid%::soulbites}
+	play sound "entity.experience_orb.pickup" with volume 0.4 at {_p}
+	play sound "minecraft:entity.player.burp" with volume 0.4 at {_p}
+	loop 4 times:
+		loop 8 times:
+			particleArc(location 1 block above {_p}, random number between 0 and 360, 1, 15, 1 tick, 24, 1.8 + (0.1* loop-value-2), soul_fire_flame, (15 * loop-value-2)-90)
+			wait 1 tick

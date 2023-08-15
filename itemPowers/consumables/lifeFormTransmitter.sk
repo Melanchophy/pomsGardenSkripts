@@ -1,0 +1,16 @@
+on right click:
+    if custom model data of player's tool is 44:
+        if cooldown(player, "universal", 10 seconds) is true:
+            if "%regions at player%" does not contain "bosshub in world spawn":
+                play sound "block.portal.trigger" with pitch 0.2 at player for player
+                play sound "entity.player.breath" with pitch 0.2 at player for player
+                stunned(player, 7.95 seconds, true)
+                send "%nl%&7&oYour body begins to feel... Strange... Pins and needles overwhelm you.%nl%"
+                loop 32 times:
+                    loop 2 times:
+                        particleArc(location -0.5 block above player's head, 0, 1, 15, 1 tick, 24, random number between 0.5 and 1.5, smoke, random number between 45 and -45)
+                    wait 0.25 seconds
+                teleport player to location(0.50, 1.00, 941.50, world "spawn", 0, 0)
+                play sound "entity.ender_eye.death" at location(0.50, 1.00, 941.50, world "spawn", 0, 0) for player
+
+                

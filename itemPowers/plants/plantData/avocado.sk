@@ -1,0 +1,101 @@
+#Plant Models
+on load:
+	set {_cmd} to 81
+	clear {tr::plant::%{_cmd}%}
+	clear {tr::plant::%{_cmd}%::*}
+	set {tr::plant::%{_cmd}%} to jungle sapling
+	set {tr::plant::%{_cmd}%::minTimeS} to 120
+	set {tr::plant::%{_cmd}%::maxTimeS} to 280
+	set {tr::plant::%{_cmd}%::fruit} to player skull named "&fAvocado" with custom model data 82 with nbt compound from "{SkullOwner:{Id:[I;82,-1245362643,-1512506786,118465354],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjk2ODVhMzlkYTFkMzkxNzVmN2FhNmQzOGIwMzEzOGRjYjFjOTA3MGEwYzU5ZDNhMTMxMzFiMWE2NDIyYzI2NiJ9fX0=""}]}}}"
+	
+	clear {tr::plantModel::%{_cmd}%::*}
+	set {_ID} to 1
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to oak log
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 1, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to oak log
+	
+	loop 2 times:
+		add 1 to {_ID}
+		set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(1*loop-value, 1+loop-value, 0)
+		set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to oak log
+		
+		add 1 to {_ID}
+		set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-1*loop-value, 1+loop-value, 0)
+		set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to oak log
+		
+		add 1 to {_ID}
+		set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 1+loop-value, 1*loop-value)
+		set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to oak log
+		
+		add 1 to {_ID}
+		set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 1+loop-value, -1*loop-value)
+		set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to oak log
+
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 3, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to mangrove leaf
+	
+	loop 3 times:
+		loop 7 times:
+			add 1 to {_ID}
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-2+loop-value-1, 3, -4+loop-value-2)
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to mangrove leaf
+	
+	loop 2 times:
+		if loop-value is 1:
+			set {_x} to -3
+		else:
+			set {_x} to 3
+		loop 3 times:
+			add 1 to {_ID}
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector({_x}, 3, -2+loop-value-2)
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to mangrove leaf
+	
+	loop 2 times:
+		if loop-value is 1:
+			set {_x} to -2
+		else:
+			set {_x} to 2
+		loop 5 times:
+			add 1 to {_ID}
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector({_x}, 3, -3+loop-value-2)
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to mangrove leaf
+
+	
+	#SECOND LAYER OF LEAVES
+	loop 3 times:
+		loop 5 times:
+			add 1 to {_ID}
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-2+loop-value-1, 4, -3+loop-value-2)
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to mangrove leaf
+	
+	loop 2 times:
+		if loop-value is 1:
+			set {_x} to -2
+		else:
+			set {_x} to 2
+		loop 3 times:
+			add 1 to {_ID}
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector({_x}, 4, -2+loop-value-2)
+			set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to mangrove leaf
+		
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(1, 2, 1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to player head
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::BlockHeadNBT} to nbt compound from "{SkullOwner:{Id:[I;%{_cmd}%,-1245362643,-1512506786,118465354],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjk2ODVhMzlkYTFkMzkxNzVmN2FhNmQzOGIwMzEzOGRjYjFjOTA3MGEwYzU5ZDNhMTMxMzFiMWE2NDIyYzI2NiJ9fX0=""}]}}}"
+
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(2, 2, -2)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to player head
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::BlockHeadNBT} to nbt compound from "{SkullOwner:{Id:[I;%{_cmd}%,-1245362643,-1512506786,118465354],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjk2ODVhMzlkYTFkMzkxNzVmN2FhNmQzOGIwMzEzOGRjYjFjOTA3MGEwYzU5ZDNhMTMxMzFiMWE2NDIyYzI2NiJ9fX0=""}]}}}"
+		
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-2, 2, -1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to player head
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::BlockHeadNBT} to nbt compound from "{SkullOwner:{Id:[I;%{_cmd}%,-1245362643,-1512506786,118465354],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjk2ODVhMzlkYTFkMzkxNzVmN2FhNmQzOGIwMzEzOGRjYjFjOTA3MGEwYzU5ZDNhMTMxMzFiMWE2NDIyYzI2NiJ9fX0=""}]}}}"
+
+
+
+

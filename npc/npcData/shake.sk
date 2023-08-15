@@ -1,0 +1,11 @@
+
+
+on load:
+	set {_npc} to "Shake"
+	
+	clear {tr::npc::%{_NPC}%::*}
+	
+	add "I haven't seen a human in a long time." to {tr::npc::%{_npc}%::dialogue::*}
+	add "&7&o*Sip Sip*" to {tr::npc::%{_npc}%::dialogue::*}
+	add "&7&o*Coddles milkshake*" to {tr::npc::%{_npc}%::dialogue::*}
+	add "&7&o*Sobs*" to {tr::npc::%{_npc}%::dialogue::*}

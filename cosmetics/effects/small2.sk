@@ -1,0 +1,189 @@
+on load:
+	clear {tr::cosmetics::1::leaf pom poms::*}
+	add vector(0.4, 0.15, 0) to {tr::cosmetics::1::leaf pom poms::*}
+	add vector(-0.4, 0.15, 0) to {tr::cosmetics::1::leaf pom poms::*}
+
+function cosmeticApplyLeafpompoms(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "leaf pom poms":
+		wait 1 ticks
+		if {_activeVariables} is not set:
+			add {tr::cosmetics::1::leaf pom poms::*} to {_l::*}
+			set {_activeVariables} to true
+		
+		set {_yaw} to ({_p}'s yaw - {_yaw})
+		loop {_l::*}:
+			rotate {_l::*} around y-axis by ({_yaw}*-1) / size of {_l::*}
+			make 1 dust using dustOption(green, 1.5) at {_p}'s head ~ loop-value
+			chance of 10%:
+				make 1 dust using dustOption(lime, 2) at {_p}'s head ~ loop-value
+		set {_yaw} to {_p}'s yaw
+
+
+
+
+on load:
+	clear {tr::cosmetics::1::clown nose::*}
+	add vector(0, 1.55, 0.35) to {tr::cosmetics::1::clown nose::*}
+
+function cosmeticApplyClownnose(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "clown nose":
+		wait 1 ticks
+		if {_activeVariables} is not set:
+			add {tr::cosmetics::1::clown nose::*} to {_l::*}
+			set {_activeVariables} to true
+		
+		set {_yaw} to ({_p}'s yaw - {_yaw})
+		loop {_l::*}:
+			rotate {_l::*} around y-axis by ({_yaw}*-1) / size of {_l::*}
+			make 1 dust using dustOption(red, 1) at {_p}'s location ~ loop-value
+		set {_yaw} to {_p}'s yaw
+
+
+
+
+function cosmeticApplyEndery(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "endery":
+		wait 5 ticks
+		make 4 of portal at {_p} with offset vector(0.2, 0.5, 0.2)
+		make 4 of portal at {_p}'s head with offset vector(0.2, 0.2, 0.2)
+
+
+
+
+on load:
+	clear {tr::cosmetics::1::white trail::*}
+	wait 1 tick
+	set {_b} to 0.3
+	loop 5 times:
+		add vector(0, {_b} + (loop-value * 0.2), 0) to {tr::cosmetics::1::white trail::*}
+
+function cosmeticApplyWhitetrail(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "white trail":
+		set {_ploc} to {_p}'s vector
+		wait 1 ticks
+		if {_ploc} is not {_p}'s vector:
+			if {_activeVariables} is not set:
+				add {tr::cosmetics::1::white trail::*} to {_l::*}
+				set {_activeVariables} to true
+			loop {_l::*}:
+				make 1 dust using dustOption(white, 1.8) at {_p}'s location ~ loop-value
+		else:
+			draw 1 of item using white wool at {_p} with offset vector(0.5, 0.2, 0.5) with extra 0
+
+
+function cosmeticApplyFootsteps(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Footsteps":
+		set {_ploc} to {_p}'s vector
+		if {_p} is sprinting:
+			wait 2 ticks
+		else:
+			wait 8 ticks
+		if {_ploc} is not {_p}'s vector:
+			make 1 dust using dustOption(white, 1.8) at {_p}'s location
+			broadcast {_block}
+			if block at location 0.3 blocks below {_p} is air:
+				make 2 dust using dustOption(white, 1) at {_p}'s location with offset vector(1, 0, 1)
+
+
+function cosmeticApplyWet(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Wet":
+		wait 2 ticks
+		make 1 dust using dustOption(light blue, 1) at {_p}
+		chance of 20%:
+			make 1 dust using dustOption(white, 2) at {_p}
+		make 2 splash at {_p}'s head with offset vector(0.3, 0.5, 0.3)
+
+
+
+
+on load:
+	clear {tr::cosmetics::1::cat::*}
+	add vector(0, 0.8, -0.25) to {tr::cosmetics::1::cat::*}
+	add vector(0, 0.85, -0.45) to {tr::cosmetics::1::cat::*}
+	add vector(0, 0.95, -0.65) to {tr::cosmetics::1::cat::*}
+	add vector(0, 1, -0.75) to {tr::cosmetics::1::cat::*}
+	add vector(0, 1.1, -0.9) to {tr::cosmetics::1::cat::*}
+
+function cosmeticApplyCat(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "cat":
+		set {_ploc} to {_p}'s vector
+		wait 3 ticks
+		if {_p}'s vector is {_ploc}:
+			if {_activeVariables} is not set:
+				add {tr::cosmetics::1::cat::*} to {_l::*}
+				set {_activeVariables} to true
+			
+			set {_yaw} to ({_p}'s yaw - {_yaw})
+			loop {_l::*}:
+				rotate {_l::*} around y-axis by ({_yaw}*-1) / size of {_l::*}
+				make 2 dust using dustOption(black, 1.5) at {_p}'s location ~ loop-value
+			set {_yaw} to {_p}'s yaw
+		else:
+			draw 2 of dust using dustOption(black, 1.5) at location 1 block above {_p} with offset vector(0.1, 0.1, 0.1) with extra 0
+
+function cosmeticApplyBedrockfog(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Bedrock fog":
+		wait 4 ticks
+		make 1 dust using dustOption(light gray, 1) at location 1 block above {_p} with offset vector(1, 1, 1)
+		make 6 ash at location 1 block above {_p} with offset vector(2, 2, 2)
+
+function cosmeticApplyFragile(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "fragile":
+		wait 4 ticks
+		particleArc(location 0.5 blocks above {_p}, random number between 0 and 360, 1, 1, 5 tick, 90, 0.5, glow, random number between 90 and -90)
+		chance of 15%:
+			make 20 item using glass at location 1 block above {_p} with offset vector(0.3, 0.4, 0.3) with extra 0
+
+function cosmeticApplyEnchanting(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "enchanting":
+		wait 4 ticks
+		make 1 dust using dustOption(pink, 0.8) at location 1 block above {_p} with offset vector(0.5, 1, 0.5)
+		make 2 enchant at location 1 block above {_p} with offset vector(0.5, 1, 0.5)
+
+function cosmeticApplyCandle(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Candle":
+		wait 1 ticks
+		loop 4 times:
+			make 1 dust using dustOption(white, 0.8) at location ((0.1*loop-value)+0.1) block above {_p}'s head
+		make 1 dust using dustOption(black, 0.8) at location 0.6 block above {_p}'s head
+		chance of 20%:
+			make 1 flame at location 0.6 blocks above {_p}'s head with extra 0
+
+
+
+
+on load:
+	clear {tr::cosmetics::1::melon ears::*}
+	add vector(0.3, 0.2, 0) to {tr::cosmetics::1::melon ears::green::*}
+	add vector(0.3, 0.4, 0) to {tr::cosmetics::1::melon ears::green::*}
+	add vector(0.2, 0.3, 0) to {tr::cosmetics::1::melon ears::green::*}
+	add vector(-0.3, 0.2, 0) to {tr::cosmetics::1::melon ears::green::*}
+	add vector(-0.3, 0.4, 0) to {tr::cosmetics::1::melon ears::green::*}
+	add vector(-0.2, 0.3, 0) to {tr::cosmetics::1::melon ears::green::*}
+	add vector(0.3, 0.35, 0) to {tr::cosmetics::1::melon ears::red::*}
+	add vector(-0.3, 0.35, 0) to {tr::cosmetics::1::melon ears::red::*}
+	add vector(0.35, 0.5, 0) to {tr::cosmetics::1::melon ears::red::*}
+	add vector(-0.35, 0.5, 0) to {tr::cosmetics::1::melon ears::red::*}
+	
+
+function cosmeticApplyMelonears(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Melon ears":
+		set {_pl} to {_p}'s vector
+		wait 2 ticks
+		
+		set {_yaw} to ({_p}'s yaw - {_yaw})
+			
+		loop indexes of {tr::cosmetics::1::melon ears::*}:
+			if {_activeVariables::%loop-value%} is not set:
+				add {tr::cosmetics::1::melon ears::%loop-value%::*} to {_l::%loop-value%::*}
+				set {_activeVariables::%loop-value%} to true
+				
+			loop {_l::%loop-value%::*}:
+				rotate {_l::%loop-value-1%::*} around y-axis by ({_yaw}*-1) / size of {_l::%loop-value-1%::*}
+				if loop-value-1 is "green":
+					make 1 dust using dustOption(green, 0.8) at {_p}'s head ~ loop-value-2 with extra 0
+					
+				else if loop-value-1 is "red":
+					make 1 dust using dustOption(red, 1) at {_p}'s head ~ loop-value-2 with extra 0
+		set {_yaw} to {_p}'s yaw
+

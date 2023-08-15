@@ -1,0 +1,151 @@
+on right click on entity:
+    if uncolored name of targeted entity contains "[Boss] ":
+        if cooldown(player, "NpcFunction", 1.5 seconds) is true:
+            set {_name::*} to uncolored name of targeted entity split at "] "
+            set {_n} to 2nd element out of {_name::*}
+            
+            set {_n} to {tr::boss::%{_n}%::bossName}
+
+            if {te::boss::%{_n}%} is not set:
+                if amount of indexes of {te::boss::%{_n}%::players::*} < 3:
+                    if {te::boss::%{_n}%::players::*} does not contain player:
+                        add player to {te::boss::%{_n}%::players::*}
+                        send "&7&oLaments can be heard down the hall." to player
+                        teleport player to {tr::boss::%{_n}%::tp}
+                        if {te::boss::%{_n}%::cutscene} is not set:
+                            set {te::boss::%{_n}%::cutscene} to true
+                            wait 1 second
+                            send "&c%{_n}% will spawn in 10 seconds. Get prepared." to {te::boss::%{_n}%::players::*}
+
+                            wait 6 second
+                            loop 3 times:
+                                send title "&c&l%loop-value - 4%..." to {te::boss::%{_n}%::players::*}
+                                loop {te::boss::%{_n}%::players::*}:
+                                    play sound "entity.wither.shoot" at loop-value-2 for loop-value-2
+                                wait 3 seconds
+
+                            loop {te::boss::%{_n}%::players::*}:
+                                play sound "entity.wither.spawn" at loop-value for loop-value
+                            send "&c&l%{_n}%&c has spawned!" to {te::boss::%{_n}%::players::*}
+                            clear {te::boss::%{_n}%::*}
+                            set {te::boss::%{_n}%} to true
+                            if {tr::boss::%{_n}%::partners::*} is set:
+                                set {te::boss::%{tr::boss::%{_n}%::partners::*}%} to true
+                            make console execute {tr::boss::%{_n}%::command::*}
+                    else:
+                        send "&cYou have entered this arena recently!" to player
+                else:
+                    send "&cOnly three players can join. (Or you may have left the arena)" to player
+            else:
+                send "&cThe boss is either active or reseting!" to player
+
+on disconnect:
+    remove player from {te::boss::%indexes of {te::boss::*}%::players::*}
+
+on death:
+    if event-world is "spawn":
+        clear drops
+        wait 1 ticks
+        set {_n} to uncolored name of victim
+        if {tr::boss::%{_n}%::tp} is set:
+            set {_loc1} to {tr::boss::%{_n}%::ArenaLoc1}
+            set {_loc2} to {tr::boss::%{_n}%::ArenaLoc2} 
+                
+            loop players where [input's location is within {_loc1} and {_loc2}]:
+                add loop-player to {_p::*}
+            
+            send "%nl%&c&l&km &c&l%{_n}% has been defeated! &km%nl%&7%{tr::boss::%{_n}%::deathmsg}%%nl%" to {_p::*}
+            loop {_p::*}:
+                play sound "entity.ender_dragon.ambient" with pitch 0.5 at loop-value for loop-value
+            
+            wait 4 seconds
+            clear {te::boss::<none>}
+            if {te::boss::%{tr::boss::%{_n}%::partners::*}%} is not set:
+                loop entities where [input's location is within {_loc1} and {_loc2}]:
+                    if loop-entity is not player:
+                        kill loop-entity
+                wait 1 seconds
+                loop indexes of {_p::*}:
+                    if {_p::%loop-value%}'s inventory has space for {tr::boss::%{_n}%::drops}:
+                        give {_p::%loop-value%} {tr::boss::%{_n}%::drops}
+                    else:
+                        send "&7Your inventory was full so You didn't bother to salvage anything." to {_p::%loop-value%}
+                teleport {_p::*} to location(-4.50, 2.00, 2020.50, world "spawn")
+            make embed:
+                set title of embed to "☄ %{_n}% has been vanquished!"
+                set description of embed to "This abomination was vanquished by %{_p::*}%."
+                
+                set embed color of embed to red
+            post last embed to text channel with id "1112454044724756613"
+
+
+
+
+
+
+
+
+
+
+
+
+on load:
+    clear {tr::boss::*}
+    set {_boss} to "Fracturizer"
+    set {tr::boss::Windy Torment::bossName} to "%{_boss}%"
+    set {tr::boss::%{_boss}%::tp} to location(0.5,2.00,3010.5, world "spawn", 180, 0)
+    set {tr::boss::%{_boss}%::deathmsg} to "A ferocious flower, previously genetically modified to make fine tea."
+    add "mm m spawn bossCreeper 1 spawn,0.5,2,3000.5" to {tr::boss::%{_boss}%::command::*}
+    set {tr::boss::%{_boss}%::ArenaLoc1} to location(-17.5,55,2981.5, world "spawn")
+    set {tr::boss::%{_boss}%::ArenaLoc2} to location(18.5,2,3019.5, world "spawn")
+    set {tr::boss::%{_boss}%::drops} to 4 of {tr::item::fizzy leaf}
+
+    set {_boss} to "Beock"
+    set {tr::boss::Stormy Persecuter::bossName} to "%{_boss}%"
+    set {tr::boss::%{_boss}%::tp} to location(1002.50, 2.00, 2982.50, world "spawn", 0, 0)
+    set {tr::boss::%{_boss}%::deathmsg} to "Once a prejudice police officer, display skeleton. Now a pile of dust."
+    add "mm m spawn bossSkeleton 1 spawn,1002.50,3.00,2997.50" to {tr::boss::%{_boss}%::command::*}
+    set {tr::boss::%{_boss}%::ArenaLoc1} to location(1025.5, 23.5, 2973.5, world "spawn")
+    set {tr::boss::%{_boss}%::ArenaLoc2} to location(978.5, 1.5, 3021.5, world "spawn")
+    add location(1006.5, 2, 2982.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(998.5, 2, 2986.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(1011.5, 2, 2988.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(991.5, 2, 2993.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(1021.5, 2, 2993.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(1005.5, 3, 2994.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(983.5, 2, 3001.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(1013.5, 2, 3001.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(993.5, 2, 3006.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(1006.5, 2, 3008.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    add location(998.5, 2, 3012.5, world "spawn") to {tr::boss::%{_boss}%::damageTetherLoc::*}
+    set {tr::boss::%{_boss}%::drops} to 4 of {tr::item::static bone}
+
+    #For duo+ bosses, the bottom shall be the parent of them all (only effects spawning)
+    set {_boss} to "Rraulothim"
+    set {tr::boss::Phantasmic Duo::bossName} to "%{_boss}%"
+    set {tr::boss::%{_boss}%::tp} to location(-999.5, 2.00, 3015.50, world "spawn", 180, 0)
+    set {tr::boss::%{_boss}%::ArenaLoc1} to location(-967, 27, 2966, world "spawn")
+    set {tr::boss::%{_boss}%::ArenaLoc2} to location(-1035, 1, 3035, world "spawn")
+    set {tr::boss::%{_boss}%::deathmsg} to "The first genetically modified wolf spider. Unfortunately corrupted by Hypoxide."
+    set {tr::boss::%{_boss}%::drops} to {tr::item::old peepers}
+    add "Rauleth" to {tr::boss::%{_boss}%::partners::*}
+
+    set {_boss} to "Rauleth"
+    set {tr::boss::Phantasmic Duo::bossName} to "%{_boss}%"
+    set {tr::boss::%{_boss}%::tp} to location(-999.5, 2.00, 3015.50, world "spawn", 180, 0)
+    set {tr::boss::%{_boss}%::deathmsg} to "A protester outside the facility back in time. After an accident, was forced to live inside as a test subject."
+    add "mm m spawn bossSpider 1 spawn,-1000.50,2.00,3000.50" to {tr::boss::%{_boss}%::command::*} 
+    add "mm m spawn bossZombie 1 spawn,-998.50,2.00,3000.50" to {tr::boss::%{_boss}%::command::*}
+    set {tr::boss::%{_boss}%::ArenaLoc1} to location(-967, 27, 2966, world "spawn")
+    set {tr::boss::%{_boss}%::ArenaLoc2} to location(-1035, 1, 3035, world "spawn")
+    set {tr::boss::%{_boss}%::drops} to 2 of {tr::item::old peepers}
+    add "Rraulothim" to {tr::boss::%{_boss}%::partners::*}
+
+    set {_boss} to "Jamoth"
+    set {tr::boss::Catatonic Anxiety::bossName} to "%{_boss}%"
+    set {tr::boss::%{_boss}%::tp} to location(2000.5, 4.00, 2988.5, world "spawn", 0, 0)
+    set {tr::boss::%{_boss}%::deathmsg} to "The catatonic chemist turned... Turned mad and paranoid by it's own creation."
+    add "mm m spawn bossEnderman 1 spawn,2000.50,2.00,3000.50" to {tr::boss::%{_boss}%::command::*}
+    set {tr::boss::%{_boss}%::ArenaLoc1} to location(2019.5, -64.00, 2980.5, world "spawn")
+    set {tr::boss::%{_boss}%::ArenaLoc2} to location(1980.5, 200.00, 3020.5, world "spawn")
+    set {tr::boss::%{_boss}%::drops} to 2 of {tr::item::hypoxide}

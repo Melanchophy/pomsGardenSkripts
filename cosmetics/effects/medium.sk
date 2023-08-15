@@ -1,0 +1,103 @@
+function cosmeticApplyHothead(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Hot head":
+		wait 5 ticks
+		draw 1 lava at location 0.4 blocks above {_p}'s head
+		draw 1 large smoke at location 0.5 blocks above {_p}'s head with extra 0
+
+
+function cosmeticApplyChillbox(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Chill box":
+		wait 5 ticks
+		draw 1 wax_off at location 1 block north and 1 block west of {_p}'s head
+		draw 1 wax_off at location -1 block north and 1 block west of {_p}'s head
+		draw 1 wax_off at location 1 block north and -1 block west of {_p}'s head
+		draw 1 wax_off at location -1 block north and -1 block west of {_p}'s head
+		draw 1 wax_off at location 1 block north and 1 block west of {_p}
+		draw 1 wax_off at location -1 block north and 1 block west of {_p}
+		draw 1 wax_off at location 1 block north and -1 block west of {_p}
+		draw 1 wax_off at location -1 block north and -1 block west of {_p}
+		draw 5 of item using packed ice at {_p} with offset vector(0.5, 0.2, 0.5) with extra 0
+
+
+on load:
+	clear {tr::cosmetics::3::flowery::*}
+	wait 1 tick
+	add vector(0.3, 0.1, 0.3) to {tr::cosmetics::3::flowery::*}
+	add vector(-0.3, 0.1, 0.3) to {tr::cosmetics::3::flowery::*}
+	add vector(-0.3, 0.1, -0.3) to {tr::cosmetics::3::flowery::*}
+	add vector(0.3, 0.1, -0.3) to {tr::cosmetics::3::flowery::*}
+
+function cosmeticApplyFlowery(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Flowery":
+		wait 4 ticks
+		if {_activeVariables} is not set:
+			add {tr::cosmetics::3::flowery::*} to {_l::*}
+			set {_activeVariables} to true
+		
+		set {_yaw} to ({_p}'s yaw - {_yaw})
+		loop {_l::*}:
+			rotate {_l::*} around y-axis by ({_yaw}*-1) / size of {_l::*}
+			make 1 dust using dustOption(green, 1.8) at {_p}'s location ~ loop-value
+		set {_yaw} to {_p}'s yaw
+		make 1 dust using dustOption(pink, 1.6) at location 2 block above {_p} 
+		particleArc(location 0.35 blocks above {_p}, random number between 0 and 90, 1, 2, 1 tick, 90, 0.5, crimson_spore, 0)
+		particleArc(location 0.35 blocks above {_p}, random number between 0 and 90, 1, 1, 1 tick, 90, 0.5, spore_blossom_air, 0)
+
+
+
+
+on load:
+	clear {tr::cosmetics::3::halo::*}
+	wait 1 tick
+	set {_sauber} to 0.4
+	loop 4 times:
+		add vector({_sauber}, 2.1, 0.4) to {tr::cosmetics::3::halo::*}
+		remove 0.2 from {_sauber}
+	set {_sauber} to 0.4
+	loop 4 times:
+		add vector(0.4, 2.1, {_sauber}) to {tr::cosmetics::3::halo::*}
+		remove 0.2 from {_sauber}
+	set {_sauber} to 0.4
+	loop 5 times:
+		add vector({_sauber}, 2.1, -0.4) to {tr::cosmetics::3::halo::*}
+		remove 0.2 from {_sauber}
+	set {_sauber} to 0.4
+	loop 4 times:
+		add vector(-0.4, 2.1, {_sauber}) to {tr::cosmetics::3::halo::*}
+		remove 0.2 from {_sauber}
+
+
+function cosmeticApplyHalo(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "halo":
+		set {_ploc} to {_p}'s vector
+		wait 3 ticks
+		if {_p}'s vector is {_ploc}:
+			if {_activeVariables} is not set:
+				add {tr::cosmetics::3::halo::*} to {_l::*}
+				set {_activeVariables} to true
+			
+			set {_yaw} to ({_p}'s yaw - {_yaw})
+			loop {_l::*}:
+				rotate {_l::*} around y-axis by ({_yaw}*-1) / size of {_l::*}
+				make 1 dust using dustOption(yellow, 0.9) at {_p}'s location ~ loop-value
+			set {_yaw} to {_p}'s yaw
+		else:
+			make 4 dust using dustOption(yellow, 1) at location 2.1 blocks above {_p} with offset vector(0.3, 0, 0.3)
+
+
+function cosmeticApplyHero(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "Hero":
+		set {_ploc} to {_p}'s vector
+		wait 4 ticks
+		if {_p}'s vector is not {_ploc}:
+			make 1 totem_of_undying at location 2.5 blocks above {_p} with offset vector(0.4, 0, 0.4) with extra 0.1
+			if {_p} is sprinting:
+				make 1 totem_of_undying at location 2.5 blocks above {_p} with offset vector(0.4, 0, 0.4) with extra 0.3
+		make 1 totem_of_undying at location 1 blocks above {_p} with offset vector(0.3, 1, 0.3) with extra 0
+
+
+
+
+
+
+

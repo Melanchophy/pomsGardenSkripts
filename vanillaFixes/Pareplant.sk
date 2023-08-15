@@ -1,0 +1,98 @@
+#Version: 1.1
+#Skript created and modified by Melanchophe (Pomo is my old alies)
+
+#
+#
+#
+
+
+
+#Options for the skript ↓
+
+#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#
+
+Options:
+	replantRequiresHoe: false
+#Lets the skript know if the player should be holding a hoe or not for the replant to activate or not
+
+	timeUntilReplant: 1.5
+#Tells the skript how long to wait before replanting a crop upon it activating
+
+	requireSeeds: true
+#This makes replanting use the seeds from the player's inventory rather than spawning them out of thin air
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+#Particle options
+
+#List of accepted particles > https://github.com/SkriptLang/Skript/blob/4e677006968b23adad81560f8e83863b5b181969/src/main/resources/lang/english.lang#L964-L1099
+
+	replantSuccessParticleType: slime
+#The particle to play upon replanting
+
+	replantSuccessParticleAmount: 3
+#The amount of particles to play upon replanting
+
+	replantFailParticleType: angry villager
+#The particle to play when the replant gets obstructed, for example when another block is placed where the crop should grow
+
+	replantFailParticleAmount: 3
+#The amount of particles to play upon an unsuccessful replant
+
+#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#
+
+
+
+#Code ↓
+
+#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#
+
+on block mine:
+	if "%event-block%" contains "ripe":
+		if {@replantRequiresHoe} is false:
+			replant(player, event-block)
+		else if player's tool is a hoe:
+			replant(player, event-block)
+
+function replant(p: player, eventBlock: block):
+	set {_eb} to "%type of {_eventBlock}%"
+	wait {@timeUntilReplant} seconds
+	if {_eventBlock} is air:
+		if block below location of {_eventBlock} is farmland or soul sand:
+			if {@requireSeeds} is true:
+				if canReplant({_p}, {_eventBlock}, {_eb}) is true:
+					set {_rp} to true
+			else:
+				set {_rp} to true
+				
+			if {_rp} is true:
+				play {@replantSuccessParticleAmount} {@replantSuccessParticleType} at location of {_eventBlock}
+				if {_eb} is "ripe wheat plant":
+					set block data of {_eventBlock} to wheat[age=0]
+				else if {_eb} is "ripe carrot plant":
+					set block data of {_eventBlock} to carrots[age=0]
+				else if {_eb} is "ripe potato plant":
+					set block data of {_eventBlock} to potatoes[age=0]
+				else if {_eb} is "ripe beetroot plant":
+					set block data of {_eventBlock} to beetroots[age=0]
+				else if {_eb} is "ripe nether wart plant":
+					set block data of {_eventBlock} to nether_wart[age=0]
+				else if {_eb} is "ripe melon stem":
+					set block data of {_eventBlock} to melon_stem[age=0]
+				else if {_eb} is "ripe pumpkin stem":
+					set block data of {_eventBlock} to pumpkin_stem[age=0]
+		else:
+			play {@replantFailParticleAmount} {@replantFailParticleType} at location of {_eventBlock}
+	else:
+		play {@replantFailParticleAmount} {@replantFailParticleType} at location of {_eventBlock}
+
+function canReplant(p: player, eventBlock: block, type: string) :: boolean:
+	replace "ripe " and " plant" with "" in {_type}
+	if {_type} is not "nether wart", "potato" or "carrot":
+		replace {_type} with "%{_type}% seeds" in {_type}
+	set {_type} to {_type} parsed as item type
+	if {_p}'s inventory contains {_type}:
+		remove {_type} from {_p}'s inventory
+		return true
+
+#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#=-=#

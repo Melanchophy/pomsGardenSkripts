@@ -1,0 +1,5 @@
+on load:
+    set {_cmd} to 80
+    set {tr::item::%{_cmd}%::trinket} to true
+    set {tr::item::%{_cmd}%::manaDamageRaw} to 2
+    set {tr::item::%{_cmd}%::maxmana} to 9

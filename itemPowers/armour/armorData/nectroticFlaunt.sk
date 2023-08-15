@@ -1,0 +1,21 @@
+on load:
+    #CMD of the helmet
+    set {_cmd} to 28
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    
+    #For convenience... set bonus variables are applied to each and every armor piece. T-T 
+    loop 4 times:
+        set {tr::armorSetBonus::%{_cmd}%::maxmana} to 1
+        set {tr::armorSetBonus::%{_cmd}%::manaRegen} to 2
+        set {tr::armorSetBonus::%{_cmd}%::manaReduction} to 0.2
+        add 1 to {_cmd}
+    
+    #Chestplate
+    set {_cmd} to 29
+    set {tr::item::%{_cmd}%::maxmana} to 2
+    #Leggings
+    set {_cmd} to 30
+    set {tr::item::%{_cmd}%::maxmana} to 2
+    #Boots
+    set {_cmd} to 31
+    set {tr::item::%{_cmd}%::maxmana} to 1

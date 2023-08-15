@@ -1,0 +1,18 @@
+on right click:
+	if custom model data of player's tool is 66:
+		if distance between player and player's targeted block is less than 35:
+			cooldown(player, "webslinger", 2 seconds) is true:
+				set {_tbl} to location at player's targeted block
+				apply slowness 2 to player for 0.8 seconds
+				set player's velocity to vector(0, 0.7, 0)
+				play sound "entity.arrow.hit" in voice category with pitch 1.1 for player at {_tbl}
+				play sound "entity.spider.ambient" in voice category with pitch 1.6 at player
+				wait 5 ticks
+				loop 8 times:
+					set {_dist} to distance between player and {_tbl}
+					set {_v} to vector between player and {_tbl} 
+					push player {_v} at speed sqrt({_dist})/14
+					particleLine(location 1.2 block above player, {_tbl}, item_snowball, 3)
+					wait 2 ticks
+					if distance between player and {_tbl} is less than 3:
+						exit loop

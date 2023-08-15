@@ -1,0 +1,6 @@
+vehicle enter:
+    if "%entity's vehicle%" contains "Boat":
+        while entity's vehicle is set:
+            push entity's vehicle in direction of entity at speed 0.4
+            push entity's vehicle upward at speed 0.05
+            wait 1 ticks

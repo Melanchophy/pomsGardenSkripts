@@ -1,0 +1,17 @@
+function NPCshop(p: player, npc: text):
+    show chest inventory named "[Ç] %{_Npc}%'s Shop" with 3 rows to {_p}
+    loop 2 times:
+        if loop-value is 1:
+            set {_n} to 0
+        else:
+            set {_n} to 8
+        loop 3 times:
+            set slot {_n} of {_p}'s current inventory to gray stained glass pane
+            add 9 to {_n}
+    
+    set {_n} to 1
+    loop {tr::npc::%{_npc}%::shop::*}:
+        add 1 to {_n1}
+        set slot {_n} of {_p}'s current inventory to loop-value
+        add 1 to {_n}
+        

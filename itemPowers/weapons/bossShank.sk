@@ -1,0 +1,18 @@
+on right click:
+    custom model data of player's tool is 53:
+        cooldown(player, "bossShank", 20 seconds) is true:
+            damageTool(player, 10)
+            hide player from all entities
+            make 20 of poof at location 1 block above player with offset vector(0.2, 0.4, 0.2) with extra 0.05
+            apply invisibility 255 to player for 7 seconds
+            apply speed 5 to player for 7 seconds
+            apply jump boost 5 to player for 7 seconds
+            play sound "entity.blaze.shoot" at player for player
+            push player in direction of player at speed 1.2
+            loop 70 times:
+                make 1 of block particle using bedrock at location 0.4 block above player with offset vector(0.2, 0.4, 0.2)
+                wait 2 ticks
+            reveal player to all entities
+
+on join:
+    reveal player to all entities

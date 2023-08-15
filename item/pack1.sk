@@ -1,0 +1,27 @@
+on load:
+	#The give command can pass out all types of items
+	#NPC's which give items can only hand out custom items
+	
+	clear {tr::item::*}
+	
+	set {_cmd} to 4
+	set {tr::item::Dark Stone Sword} to Stone sword named "&fDark Stone Sword" with custom model data {_cmd}
+	
+	set {_cmd} to 5
+	set {tr::item::%{_cmd}%::mana} to 4
+	set {tr::item::Dark Iron Sword} to iron sword named "&fDark Iron Sword" with lore "&b{High Jump, %{tr::item::%{_cmd}%::mana}%m}%nl%&3Jump higher into the%Nl%&3air than you would normally!" with custom model data {_cmd}
+	
+	set {_cmd} to 6
+	set {tr::item::My Darling Nia} to paper named "&fMy Darling Nia" with lore "&7&oAmazing and beautiful, not a flower or a tree.%nl%&7&oMuch prettier than that, and only I can see.%nl%&7&oLoving and caring, night down to the core.%NL%&7&oFilling me with happiness and so much more.%nl%&7&oEyes are so stunning, cannot look away.%nl%&7&oGorgeous and shining, all throughout the day.%nl%&7&oHere in your arms, is where I belong.%nl%&7&oThe beating of your heart, is like a beautiful song.%nl%&7-Sinperlyll." with custom model data {_cmd}
+
+	set {_cmd} to 49
+	set {tr::item::Static Bone} to bone named "&eStatic Bone" with lore "&7" with custom model data {_cmd} with nbt from "{Enchantments:[{id:aqua_affinity,lvl:1}],HideFlags:1}"
+
+	set {_cmd} to 51
+	set {tr::item::Fizzy Leaf} to fern named "&eFizzy Leaf" with lore "&7" with custom model data {_cmd} with nbt from "{Enchantments:[{id:aqua_affinity,lvl:1}],HideFlags:1}"
+
+	set {_cmd} to 49
+	set {tr::item::Old Peepers} to frogspawn named "&eOld Peepers" with lore "&7" with custom model data {_cmd} with nbt from "{Enchantments:[{id:aqua_affinity,lvl:1}],HideFlags:1}"
+	
+	set {_cmd} to 57
+	set {tr::item::hypoxide} to prismarine crystal named "&eHypoxide" with lore "&7" with custom model data {_cmd} with nbt from "{Enchantments:[{id:aqua_affinity,lvl:1}],HideFlags:1}"

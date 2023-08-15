@@ -1,0 +1,4 @@
+on load:
+    set {_cmd} to 73
+    set {tr::item::%{_cmd}%::trinket} to true
+    set {tr::item::%{_cmd}%::manaDamageRaw} to 2

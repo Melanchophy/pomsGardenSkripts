@@ -1,0 +1,89 @@
+on spawn of entity:
+    if event-world is "spawn":
+        wait 1 ticks
+        set {_n} to uncolored name of event-entity
+        if {_n} is "fracturizer":
+            set {_loc1} to {tr::boss::%{_n}%::ArenaLoc1}
+            set {_loc2} to {tr::boss::%{_n}%::ArenaLoc2}
+            set {te::boss::%{_n}%::boomActive} to true
+            wait 8 seconds
+            while event-entity is alive:
+                if {te::boss::%{_n}%} and {te::boss::%{_n}%::boomActive} is set:
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        send "&cThe arena pressurizes..." to loop-player
+                        play sound "entity.wither.spawn" at loop-player for loop-player
+                        wait 25 ticks
+                if {te::boss::%{_n}%} and {te::boss::%{_n}%::boomActive} is set:
+                    fracturizerBoom(entity, {_loc1}, {_loc2})
+                loop 16 times:
+                    wait 20 ticks
+                    if event-entity is not alive:
+                        exit loop
+            clear {te::boss::%{_n}%::*}
+            clear {te::boss::%{_n}%}
+
+
+on damage:
+    if event-world is "spawn":
+        if uncolored name of victim is "Fracturizer":
+            set {_n} to uncolored name of victim
+            if health of victim / max health of victim * 100 <= 50:
+                if {te::boss::%{_n}%::boomActive} is not set:
+                    cancel event
+                if cooldown(victim, "fracturizerFission", 30 seconds) is true:
+                    clear {te::boss::%{_n}%::boomActive}
+                    cancel event
+                    loop 3 times:
+                        particleLine(victim, location(0.5, 3.5, 3000.5, world "spawn"), wax_on, 4)
+                        wait 4 ticks
+                    teleport victim to location(0.5, 3, 3000.5, world "spawn")
+                    stunned(victim, 255 ticks, true)
+                    set {_loc1} to {tr::boss::%{_n}%::ArenaLoc1}
+                    set {_loc2} to {tr::boss::%{_n}%::ArenaLoc2}
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        send "&cThe air becomes fizzy..." to loop-player
+                        play sound "entity.wither.spawn" at loop-player for loop-player
+                    wait 25 ticks
+                    if {te::boss::%{_n}%} is set:
+                        loop 3 times:
+                            loop 2 times:
+                                fracturizerBoom(victim, {_loc1}, {_loc2})
+                                wait 10 ticks
+                            wait 40 ticks
+                    wait 2 seconds
+                    if victim is alive:
+                        set {te::boss::%{_n}%::boomActive} to true
+                    
+
+
+
+
+function fracturizerBoom(e: entity, loc1: location, loc2: location):
+    loop 14 times:
+        set {_x} to random number between {_loc1}'s x-coord and {_loc2}'s x-coord
+        set {_y} to random number between 0 and 20
+        set {_z} to random number between {_loc1}'s z-coord and {_loc2}'s z-coord
+        add location({_x}, {_y}, {_z}, world "spawn") to {_boomLoc::*} 
+                    
+    loop 5 times:
+        play sound "entity.wither.shoot" with volume loop-value-1 * 0.2 with pitch 0.3 at {_e}
+        loop {_boomLoc::*}:
+            loop loop-value-1 * 4 times:
+                particleArc(location 1 block above loop-value-2, 0, 1, 15, 1 tick, 24, loop-value-1, flame, loop-value-3 * random number between 45 and -45)
+        wait 10 tick
+
+    loop players where [input's location is within {_loc1} and {_loc2}]:
+        play sound "entity.generic.explode" with volume 2 at loop-player for loop-player
+        play sound "entity.generic.explode" with volume 2 at loop-player for loop-player
+    loop {_boomLoc::*}:
+        make 1 explosion_emitter at loop-value
+        loop players in radius 6.3 of loop-value:
+            make {_e} damage loop-player by 20
+
+
+on right click on creeper:
+    if name of creeper is set:
+        cancel event
+
+
+

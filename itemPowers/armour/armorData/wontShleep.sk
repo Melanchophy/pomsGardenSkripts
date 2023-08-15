@@ -1,0 +1,23 @@
+on load:
+
+
+    set {_cmd} to 19
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    set {tr::item::wont shleep cap} to leather helmet named "&fWont Shleep Cap" with lore "&3" with custom model data {_cmd}
+
+
+    loop 4 times:
+        set {tr::armorSetBonus::%{_cmd}%::maxmana} to 1
+        add 1 to {_cmd}
+
+    set {_cmd} to 20
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    set {tr::item::wont shleep Shirt} to leather chestplate named "&fWont Shleep Shirt" with lore "&3" with custom model data {_cmd}
+
+    set {_cmd} to 21
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    set {tr::item::wont shleep Bottoms} to leather leggings named "&fWont Shleep Bottoms" with lore "&3" with custom model data {_cmd}
+
+    set {_cmd} to 22
+    set {tr::item::%{_cmd}%::maxmana} to 0
+    set {tr::item::wont shleep slippers} to leather boots named "&fWont Shleep Slippers" with lore "&3" with custom model data {_cmd}

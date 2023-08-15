@@ -1,0 +1,8 @@
+command /spawn:
+	trigger:
+		teleport player to {tr::location::spawn} 
+		set {_l} to {tr::location::spawn} 
+		tpEffect(player, {_l})
+
+function tpEffect(e: entity, l: location):
+	play sound "entity.enderman.teleport" in voice category with volume 1 with pitch 0.7 for {_e} at {_l}

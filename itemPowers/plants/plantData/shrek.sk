@@ -1,0 +1,52 @@
+#Plant Models
+on load:
+	set {_cmd} to 83
+	clear {tr::plant::%{_cmd}%}
+	clear {tr::plant::%{_cmd}%::*}
+	set {tr::plant::%{_cmd}%} to redstone torch
+	set {tr::plant::%{_cmd}%::minTimeS} to 4
+	set {tr::plant::%{_cmd}%::maxTimeS} to 8
+	set {tr::plant::%{_cmd}%::fruit} to player skull named "&aShrek-Chan Plushie" with lore "&8&oYou spent all this effort...%nl%&8&oOn this..?%nl%&8&oWas it worth it? :3" with custom model data 84 with nbt compound from "{SkullOwner:{Id:[I;84,-1453178151,-1819908436,-842857871],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWMyYzM3MTM0ZGJkNDliYjkxNjNiNDljODlhYTg0NjE4YTM1NTY4YWVlNDk0YmM5NDZlZjhjNTlmZmJhNDNiMiJ9fX0=""}]}}}"
+	
+	clear {tr::plantModel::%{_cmd}%::*}
+	set {_ID} to 1
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 1, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to player head
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::BlockHeadNBT} to nbt compound from "{SkullOwner:{Id:[I;%{_cmd}%,-1453178151,-1819908436,-842857871],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWMyYzM3MTM0ZGJkNDliYjkxNjNiNDljODlhYTg0NjE4YTM1NTY4YWVlNDk0YmM5NDZlZjhjNTlmZmJhNDNiMiJ9fX0=""}]}}}"
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 0, 1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(0, 0, -1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(1, 0, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-1, 0, 0)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(1, 0, 1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-1, 0, -1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(1, 0, -1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+	add 1 to {_ID}
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::LocationOffset} to vector(-1, 0, 1)
+	set {tr::plantModel::%{_cmd}%::%{_ID}%::Block} to gold block
+	
+

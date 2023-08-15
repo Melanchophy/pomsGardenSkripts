@@ -1,0 +1,226 @@
+on block place:
+	if custom model data of player's tool is not 0:
+		cancel event
+	else if "%type of event-block%" is "%type of player's offhand tool%":
+		if custom model data of player's offhand tool is not 0:
+			cancel event
+
+on right click:
+	if custom model data of player's offhand tool is not 0:
+		if player's tool is air:
+			cancel event
+	else if custom model data of player's tool is 5:
+		abilityHighJump(player)
+	else if custom model data of player's tool is 7:
+		cancel event
+		abilityJab(player)
+	else if custom model data of player's tool is 8:
+		cancel event
+		abilityWitherJab(player)
+	else if custom model data of player's tool is 9:
+		cancel event
+		if cooldown(player, "playerleash", 1 seconds) is true:
+			if player's world is not "Spawn":
+				if player's target player is set:
+					if distance between player's targeted player and player is less than distance between player and player's target block:
+						if distance between player and target player is less than 2.5:
+							set {_t} to player's target player
+							if player is not player's target player:
+								if number of indexes of {te::player::%player%::leashed::*} is less than 7:
+									play sound "item.crossbow.quick_charge_1" at player
+									if {te::player::%player%::leashed::%{_t}%} is set:
+										clear {te::player::%player%::leashed::%{_t}%}
+									else:
+										set {te::player::%player%::leashed::%{_t}%} to true
+									while {te::player::%player%::leashed::%{_t}%} is true:
+										wait 1 ticks
+										set {_dist} to distance between player and {_t}
+										if {_dist} is greater than 20:
+											clear {te::player::%player%::leashed::%{_t}%}
+										else if {_dist} is greater than 5:
+											set {_v} to vector between {_t} and player
+											push {_t} {_v} at speed ({_dist}-4) / 30
+											particleLine(location 0.9 blocks above player, location 1.3 block above {_t}, crit, 2)
+										else:
+											particleLine(location 0.9 blocks above player, location 1.1 block above {_t}, crit, 4)
+				else:
+					send action bar "&7Find a player to leash" to player
+
+
+on load:
+    set {tr::napSackEntity::11} to "villager"
+    set {tr::napSackEntity::villager} to 11
+
+
+
+on right click on entity:
+    custom model data of player's tool is 10:
+        cancel event
+        wait 1 tick
+        if custom model data of player's tool is 10:
+            if event-entity is baby villager:
+                if ai of event-entity is true:
+                    if event-entity's name is not set:
+                        if item amount of player's tool is 1:
+                            if {te::%player%::sackTaking} is not set:
+                                set {te::%player%::sackTaking} to true
+                                nappingSackTake(player, event-entity, 10, 11)
+
+on right click:
+    if {tr::napSackEntity::%custom model data of player's tool%} is set:
+        cancel event
+        if item amount of player's tool is 1:
+            if {te::%player%::sackOpening} is not set:
+                set {te::%player%::sackOpening} to true
+                if custom model data of player's tool is 10:
+                    set {_n} to 11
+                else:
+                    set {_n} to 10
+                nappingSackOpen(player, {tr::napSackEntity::%custom model data of player's tool%}, {_n})
+    
+
+function nappingSackTake(p: player, e: entity, n1: number, n2: number):
+    if health of {_e} is greater than 0:
+        set ai of {_e} to false
+        play sound "entity.bat.takeoff" with volume 0.7 at {_p}
+        apply slowness 4 to {_p} for 1 seconds
+        loop 3 times:
+            wait 20 ticks
+            napCheck({_p}, {_e}, {_n1}) is true:
+                play sound "entity.bat.takeoff" with volume 0.7 at {_p}
+                play 4 spruce planks item break at {_e}'s head
+                apply slowness 4 to {_p} for 1 seconds
+            else:
+                exit
+        play sound "entity.bat.takeoff" with volume 0.7 at {_p}
+        apply invisibility without particles to {_e}
+        clear {te::%{_p}%::sackTaking}
+        kill {_e}
+        add "&7[Filled]" to lore of {_p}'s tool
+        set custom model data of {_p}'s tool to {_n2}
+
+function napCheck(p: player, e: entity, n: number) :: boolean:
+    if item amount of {_p}'s tool is 1:
+        if custom model data of {_p}'s tool is {_n}:
+            if distance between {_p} and {_e} is less than 4:
+                return true
+                exit
+            else:
+                send "&cYou're too far away" to {_p}
+        else:
+            send "&cYou swapped tools" to {_p}
+    else:
+        send "&cYou have too many sacks" to {_p}
+    set ai of {_e} to true
+    clear {te::%{_p}%::sackTaking}
+    clear {te::%{_p}%::sackOpening}
+
+
+function nappingSackOpen(p: player, e: text, n: number):
+    play sound "entity.bat.loop" with volume 0.7 at {_p}
+    set {_n2} to custom model data of {_p}'s tool
+    apply slowness 4 to {_p} for 1 seconds
+    loop 4 times:
+        play 4 spruce planks item break at location 0.2 blocks above {_p}
+        wait 5 ticks
+    napCheck({_p}, {_p}, {_n2}) is true:
+        play sound "entity.bat.takeoff" with volume 0.7 at {_p}
+        set {_e} to "baby %{_e}%" parsed as entity type
+        spawn {_e} at location of {_p}
+        set custom model data of {_p}'s tool to {_n}
+        remove all "&7[Filled]" from lore of {_p}'s tool
+        clear {te::%{_p}%::sackOpening}
+        
+
+
+
+
+function abilityHighJump(p: player):
+	if cooldown({_p}, "Dark Iron Sword", 1 seconds) is true:
+		if manaConsume({_p}, {tr::item::%custom model data of {_p}'s tool%::mana}) is true:
+			play sound "minecraft:ui.toast.in" with volume 1.2 at {_p}
+			particleArc(location 0.4 blocks above {_p}, 0, 1, 16, 1 tick, 22.5, 0.7, ash, 0)
+			set {_p}'s velocity to vector(0, 0, 0)
+			wait 4 ticks
+			particleArc(location 0.4 blocks above {_p}, 0, 1, 16, 1 tick, 22.5, 0.7, crit, 0)
+			play sound "minecraft:entity.snowball.throw" with pitch 0.6 at {_p} 
+			set {_p}'s velocity to vector(0, 1, 0)
+			wait 4 ticks
+			apply slow falling to {_p} for 2.5 seconds
+
+function abilityJab(p: player):
+	if cooldown({_p}, "Dark Imbued Rose", 3 seconds) is true:
+		if manaConsume({_p}, 4) is true:
+			play sound "minecraft:ui.toast.in" with volume 1.2 at {_p} for all players
+			play sound "minecraft:entity.snowball.throw" with pitch 0.6 at {_p} 
+			if distance between {_p}'s target entity and {_p} is less than distance between {_p} and {_p}'s target block:
+				set {_l} to {_p}'s target entity
+			else if distance between {_p} and {_p}'s target block is less than 6:
+				set {_l} to {_p}'s target block
+			else:
+				set {_l} to location 5 blocks in front of {_p}
+			particleLine(location 1.1 blocks above {_p}, location 1.1 blocks above {_l}, smoke, 3)
+			if {_p}'s target entity is set:
+				if damageCheck({_p}, {_l}) is true:
+					set {_near::*} to 4 nearest entity in radius 6 around {_p}'s target entity
+					apply poison 5 to {_l} for 8 seconds
+					play sound "entity.skeleton.shoot" with pitch 0.6 at {_p}
+					remove {_p}'s target entity from {_near::*}
+					loop {_near::*}:
+						chance of 50%:
+							if damageCheck({_p}, loop-value) is true:
+								if {_p} is not loop-value:
+									particleLine(location 1 block above {_l}, location 1 block above loop-value, crit, 4)
+									apply poison 2 to loop-value for 5 seconds
+									play sound "entity.skeleton.shoot" with pitch 0.6 at {_p}
+									wait 5 ticks
+									set {_near1::*} to 3 nearest entity in radius 4 around loop-value
+									remove loop-value from {_near1::*}
+									loop {_near1::*}:
+										chance of 50%:
+											if damageCheck(loop-value-1, loop-value-2) is true:
+												if {_p} is not loop-value-2:
+													apply poison to loop-value-2 for 5 seconds
+													play sound "entity.skeleton.shoot" with pitch 0.6 at {_p}
+													particleLine(location 1 block above loop-value-1, location 1 block above loop-value-2, crit, 4)
+													wait 5 tick
+
+
+function abilityWitherJab(p: player):
+	if cooldown({_p}, "Dark Imbued Wither Rose", 3 seconds) is true:
+		if manaConsume({_p}, 6) is true:
+			play sound "minecraft:ui.toast.in" with volume 1.2 at {_p} for all players
+			play sound "minecraft:entity.snowball.throw" with pitch 0.6 at {_p} 
+			if distance between {_p}'s target entity and {_p} is less than distance between {_p} and {_p}'s target block:
+				set {_l} to {_p}'s target entity
+			else if distance between {_p} and {_p}'s target block is less than 6:
+				set {_l} to {_p}'s target block
+			else:
+				set {_l} to location 5 blocks in front of {_p}
+			particleLine(location 1.1 blocks above {_p}, location 1.1 blocks above {_l}, smoke, 3)
+			if {_p}'s target entity is set:
+				if damageCheck({_p}, {_l}) is true:
+					set {_near::*} to 6 nearest entity in radius 6 around {_p}'s target entity
+					apply wither 3 to {_l} for 4 seconds
+					make {_p} damage {_l} by abilityDamage({_p}, 4)
+					remove {_p}'s target entity from {_near::*}
+					loop {_near::*}:
+						chance of 100%:
+							if damageCheck({_p}, loop-value) is true:
+								if {_p} is not loop-value:
+									particleLine(location 1 block above {_l}, location 1 block above loop-value, crit, 4)
+									make {_p} damage loop-value by abilityDamage({_p}, 1)
+									apply wither 2 to loop-value for 4 seconds
+									play sound "entity.skeleton.shoot" with pitch 0.6 at {_p}
+									wait 5 ticks
+									set {_near1::*} to 3 nearest entity in radius 4 around loop-value
+									remove loop-value from {_near1::*}
+									loop {_near1::*}:
+										chance of 100%:
+											if damageCheck(loop-value-1, loop-value-2) is true:
+												if {_p} is not loop-value-2:
+													make {_p} damage loop-value-2 by abilityDamage({_p}, 1)
+												apply wither to loop-value-2 for 4 seconds
+												play sound "entity.skeleton.shoot" with pitch 0.6 at {_p}
+												particleLine(location 1 block above loop-value-1, location 1 block above loop-value-2, crit, 4)
+												wait 1 tick

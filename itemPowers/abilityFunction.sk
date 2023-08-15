@@ -1,0 +1,6 @@
+function abilityFunc(player: player, cooldown: timespan, cooldownText: text, manaCost: number) :: boolean:
+    if manaConsume({_player}, {_manaCost}) is true:
+        if cooldown({_player}, {_cooldownText}, {_cooldown}) is true:
+            return true
+        else:
+            manaChange({_player}, {_manaCost}-1)

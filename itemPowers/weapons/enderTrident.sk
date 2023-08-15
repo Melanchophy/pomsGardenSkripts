@@ -1,0 +1,23 @@
+on projectile shoot:
+	projectile is trident:
+		custom model data of shooter's tool is 42:
+			set {te::%projectile's uuid%::enderTrident} to true
+
+
+on projectile collide:
+	{te::%projectile's uuid%::enderTrident} is true:
+		make shooter damage shooter by 5
+		particleLine(shooter's head, projectile, glow, 3)
+		teleport shooter to location(projectile's x-coordinate, projectile's y-coordinate, projectile's z-coordinate, shooter's world, shooter's yaw, shooter's pitch)
+	wait 1 tick
+	clear {te::%projectile's uuid%::*}
+
+on projectile hit:
+	{te::%projectile's uuid%::enderTrident} is true:
+		make shooter damage shooter by 5
+		particleLine(shooter's head, projectile, glow, 3)
+		teleport shooter to location(projectile's x-coordinate, projectile's y-coordinate, projectile's z-coordinate, shooter's world, shooter's yaw, shooter's pitch)
+	wait 1 tick
+	clear {te::%projectile's uuid%::*}
+
+	

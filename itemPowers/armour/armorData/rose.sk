@@ -1,0 +1,25 @@
+on load:
+
+
+    set {_cmd} to 45
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    set {tr::item::%{_cmd}%::manaregen} to 1
+    set {tr::item::Rose Crown} to leather helmet named "&fRose Crown" with custom model data {_cmd} with nbt from "{Trim:{pattern:wayfinder,material:copper},display:{color:13387339,Lore:['["""",{""text"":""When on Head:"",""italic"":false,""color"":""gray""}]','["""",{""text"":""+1 Max Mana"",""italic"":false,""color"":""blue""}]','["""",{""text"":""+1 Mana Regen"",""italic"":false,""color"":""blue""}]','["""",{""text"":""Set Bonus:"",""italic"":false,""color"":""gray""}]','["""",{""text"":""+1 Mana Regen"",""italic"":false,""color"":""blue""}]']},HideFlags:2,AttributeModifiers:[{AttributeName:""generic.armor"",Amount:0,Slot:head,Name:""generic.armor"",UUID:[I;-123620,27353,65952,-54706]}]}"
+
+
+    loop 4 times:
+        set {tr::armorSetBonus::%{_cmd}%::maxmana} to 1
+        set {tr::armorSetBonus::%{_cmd}%::manaregen} to 1
+        add 1 to {_cmd}
+
+    set {_cmd} to 46
+    set {tr::item::%{_cmd}%::maxregen} to 1
+    set {tr::item::Rose Dress} to leather chestplate named "&fRose Dress" with custom model data {_cmd} with nbt from "{Trim:{pattern:wild,material:copper},display:{color:13387339,Lore:['["""",{""text"":""When on Body:"",""italic"":false,""color"":""gray""}]','["""",{""text"":""+1 Mana Regen"",""italic"":false,""color"":""blue""}]','["""",{""text"":""Set Bonus:"",""italic"":false,""color"":""gray""}]','["""",{""text"":""+1 Mana Regen"",""italic"":false,""color"":""blue""}]']},HideFlags:2,AttributeModifiers:[{AttributeName:""generic.armor"",Amount:0,Name:""generic.armor"",UUID:[I;-123620,20787,73646,-41574]}]}"
+
+    set {_cmd} to 47
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    set {tr::item::Rose Skirt} to leather leggings named "&fRose Skirt" with custom model data {_cmd} with nbt from "{Trim:{pattern:coast,material:emerald},display:{color:8439583,Lore:['["""",{""text"":""When on Legs:"",""italic"":false,""color"":""gray""}]','["""",{""text"":""+3 Armor"",""italic"":false,""color"":""blue""}]','["""",{""text"":""+1 Max Mana"",""italic"":false,""color"":""blue""}]','["""",{""text"":""Set Bonus:"",""italic"":false,""color"":""gray""}]','["""",{""text"":""+1 Mana Regen"",""italic"":false,""color"":""blue""}]']},HideFlags:2,AttributeModifiers:[{AttributeName:""generic.armor"",Amount:3,Slot:legs,Name:""generic.armor"",UUID:[I;-123620,20787,73646,-41574]}]}"
+
+    set {_cmd} to 48
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    set {tr::item::Rose Heels} to leather boots named "&fRose Heels" with custom model data {_cmd} with nbt from "{Trim:{pattern:coast,material:emerald},display:{color:8439583,Lore:['["""",{""text"":""When on Legs:"",""italic"":false,""color"":""gray""}]','["""",{""text"":""+2 Armor"",""italic"":false,""color"":""blue""}]','["""",{""text"":""+1 Max Mana"",""italic"":false,""color"":""blue""}]','["""",{""text"":""Set Bonus:"",""italic"":false,""color"":""gray""}]','["""",{""text"":""+1 Mana Regen"",""italic"":false,""color"":""blue""}]']},HideFlags:2,AttributeModifiers:[{AttributeName:""generic.armor"",Amount:2,Slot:feet,Name:""generic.armor"",UUID:[I;-123620,20787,73646,-41574]}]}"

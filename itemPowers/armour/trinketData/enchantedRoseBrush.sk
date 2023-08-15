@@ -1,0 +1,5 @@
+on load:
+    set {_cmd} to 58
+    set {tr::item::%{_cmd}%::trinket} to true
+    set {tr::item::%{_cmd}%::maxmana} to 2
+    set {tr::item::enchanted rose brush} to rose bush named "&fEnchanted Rose Brush" with lore "&7When in pocket:%nl%&9+2 Max Mana" with custom model data {_cmd} with nbt from "{Enchantments:[{id:aqua_affinity,lvl:1}],HideFlags:1}"

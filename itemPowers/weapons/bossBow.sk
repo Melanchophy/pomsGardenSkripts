@@ -1,0 +1,49 @@
+on left click:
+    custom model data of player's tool is 52:
+        cancel event
+        cooldown(player, "bowbossararow", 6 seconds) is true:
+            if player's gamemode is not creative:
+                if player's inventory contains arrow:
+                    if player's tool is not enchanted with infinity:
+                        remove arrow from player's inventory
+                    set {_fire} to true
+                else:
+                    send "&cI require arrow to use" to player
+            else:
+                set {_fire} to true
+
+            if {_fire} is true:
+                cancel event
+                damageTool(player, 2)
+                set {te::%player's uuid%::explosiveArrow} to true
+                make player shoot arrow at speed 3
+                wait 1 tick
+                clear {te::%player's uuid%::explosiveArrow}
+
+on shoot:
+    if custom model data of shooter's tool is 52:
+        play sound "block.piston.extend" with volume 1.1 with pitch 0.8 at shooter
+        
+        if {te::%shooter's uuid%::explosiveArrow} is true:
+            set {te::%projectile's uuid%::explosiveArrow} to true
+        else:
+            push projectile in direction of shooter at speed 1
+
+on projectile collide:
+    if {te::%projectile's uuid%::explosiveArrow} is true:
+        cancel event
+        play huge explosion at event-location
+        play sound "entity.generic.explode" with volume 1.1 with pitch 1.2 at event-location
+        make shooter damage event-entity by 27
+        loop entities in radius 5 of event-location:
+            make shooter damage loop-entity by 18
+        delete event-projectile
+
+on projectile hit:
+    if {te::%projectile's uuid%::explosiveArrow} is true:
+        cancel event
+        play huge explosion at event-location
+        play sound "entity.generic.explode" with volume 1.1 with pitch 1.2 at event-location
+        loop entities in radius 5 of event-location:
+            make shooter damage loop-entity by 18
+        delete event-projectile

@@ -1,0 +1,7 @@
+
+command /discord:
+	trigger:
+		send "%nl%&f&5[&dDisco&5] &fInvite link: <tooltip:Click Here!><link:https://discord.gg/qR3nY4DEkh>&d&nhttps://discord.gg/qR3nY4DEkh<reset>%nl%%nl%&7 If you also wouldn't mind, please consider advertising the server!%nl%"
+		play sound "minecraft:entity.item.pickup" in voice category with pitch 1.1 for player at player
+
+

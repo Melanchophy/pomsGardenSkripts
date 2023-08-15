@@ -1,0 +1,6 @@
+command /center:
+	permission: pg.cmd.centere
+	trigger:
+		set {_x} to floor(player's x-coord) + 0.5
+		set {_z} to floor(player's z-coord) + 0.5
+		teleport player to location({_x}, player's y-coord, {_z}, player's world, player's yaw, player's pitch)

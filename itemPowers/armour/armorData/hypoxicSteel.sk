@@ -1,0 +1,15 @@
+on load:
+
+
+    set {_cmd} to 23
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    loop 4 times:
+        set {tr::armorSetBonus::%{_cmd}%::manaRegen} to 1
+        set {tr::armorSetBonus::%{_cmd}%::maxmana} to 1
+        add 1 to {_cmd}
+    set {_cmd} to 24
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    set {_cmd} to 25
+    set {tr::item::%{_cmd}%::maxmana} to 1
+    set {_cmd} to 26
+    set {tr::item::%{_cmd}%::maxmana} to 1

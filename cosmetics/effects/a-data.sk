@@ -1,0 +1,46 @@
+on load:
+	set {tr::location::soulTotem} to location(0.5, 1.5, -27.5, world "spawn")
+	
+	#Small Cosmetics
+	clear {tr::cosmetics::1::*}
+	set {tr::cosmetics::1::Cloudy} to white wool named "&fCloudy"
+	set {tr::cosmetics::1::Stormy} to Gray wool named "&7Stormy"
+	set {tr::cosmetics::1::Sparky} to yellow wool named "&eSparky"
+	set {tr::cosmetics::1::Sky} to light blue wool named "&bSky"
+	set {tr::cosmetics::1::Slimey} to lime wool named "&aSlimey"
+	set {tr::cosmetics::1::Redish} to red wool named "&cRedish"
+	set {tr::cosmetics::1::Leaf Pom Poms} to oak leaves named "&2Leaf Pom Poms"
+	set {tr::cosmetics::1::Clown Nose} to spider eye named "&cClown Nose"
+	set {tr::cosmetics::1::Endery} to ender pearl named "&5Endery"
+	set {tr::cosmetics::1::White Trail} to white glass named "&fWhite Trail"
+	set {tr::cosmetics::1::Footsteps} to grass path named "&6Footsteps"
+	set {tr::cosmetics::1::Wet} to water bucket named "&3Wet"
+	set {tr::cosmetics::1::Cat} to Cat spawn egg named "&7Cat"
+	set {tr::cosmetics::1::Bedrock Fog} to Bedrock named "&8Bedrock Fog"
+	set {tr::cosmetics::1::Fragile} to empty bottle named "&fFragile"
+	set {tr::cosmetics::1::candle} to white candle named "&fCandle"
+	set {tr::cosmetics::1::enchanting} to book named "&7Enchanting"
+	set {tr::cosmetics::1::melon ears} to melon named "&aMelon Ears"
+	set {tr::cosmetics::1::bone meal} to bone meal named "&fBon&ae &fmeal"
+	set {tr::cosmetics::1::shoulder pixie} to yellow dye named "&eShoulder Pixie"
+	set {tr::cosmetics::1::minty} to kelp named "&aMinty"
+	set {tr::cosmetics::1::dizzy} to nether star named "&fDizzy"
+
+
+	
+	#Medium Cosmetics
+	clear {tr::cosmetics::3::*}
+	set {tr::cosmetics::3::Flowery} to pink wool named "&dFlowery"
+	set {tr::cosmetics::3::Hot Head} to lava bucket named "&4Hot Head"
+	set {tr::cosmetics::3::Chill Box} to packed ice block named "&3Chill Box"
+	set {tr::cosmetics::3::Nyan Trail} to end crystal named "&dNyan Trail"
+	set {tr::cosmetics::3::Halo} to glow item frame named "&eHalo"
+	set {tr::cosmetics::3::Hero} to totem of undying named "&aHero"
+	set {tr::cosmetics::3::Potion Mishaps} to potions of water breathing named "&5Potion Mishaps"
+	
+	
+	#Large Cosmetics
+	clear {tr::cosmetics::5::*}
+	set {tr::cosmetics::5::Kitsune} to gold block named "&6Kitsune"
+	set {tr::cosmetics::5::Ritual} to redstone dust named "&4Ritual"
+	set {tr::cosmetics::5::Hypoxia} to warped hyphae named "&3Hypoxia"

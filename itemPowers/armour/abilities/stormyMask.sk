@@ -1,0 +1,8 @@
+on armor change:
+    if custom model data of event-item is 84:
+        while custom model data of boots of player is 84:
+            wait 5 tick
+            apply strength 1 without particles to player for 1 second replacing existing effect
+            if player is wet:
+                apply slowness 4 without particles to player for 6 second replacing existing effect
+                damage player by 1

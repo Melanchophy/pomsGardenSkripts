@@ -1,0 +1,4 @@
+every 1 seconds:
+	loop all players:
+		set tablist header of loop-player to "&a✿&2 ==-==-==&a✿&2==-==-==&a✿&2==-==-== &a✿%nl%%nl%&a&nPomsGarden%nl%"
+		set tablist footer of loop-player to "%nl%&7Tps: %2nd element of tps%%nl%&7Players %number of online players%/%max players%%nl%&7IP: &n78.46.84.184:25681%nl%%nl%&a✿&2 ==-==-==&a✿&2==-==-==&a✿&2==-==-== &a✿"

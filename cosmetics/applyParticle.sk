@@ -1,0 +1,113 @@
+function applyEffect(p: player, part: text):
+	set {te::player::%{_p}%::activeCosmetic} to {_part}
+	
+	# SMALL PARTICLE EFFECTS
+	
+	#Small 1
+	if {_part} is "Cloudy":
+		cosmeticApplyCloudy({_p})
+
+	else if {_part} is "Stormy":
+		cosmeticApplyStormy({_p})
+
+	else if {_part} is "Sparky":
+		cosmeticApplySparky({_p})
+
+	else if {_part} is "Sky":
+		cosmeticApplySky({_p})
+
+	else if {_part} is "Redish":
+		cosmeticApplyRedish({_p})
+
+	else if {_part} is "Slimey":
+		cosmeticApplySlimey({_p})
+
+	#Small 2
+	else if {_part} is "Leaf Pom Poms":
+		cosmeticApplyLeafpompoms({_p})
+
+	else if {_part} is "Clown Nose":
+		cosmeticApplyClownnose({_p})
+
+	else if {_part} is "Endery":
+		cosmeticApplyEndery({_p})
+
+	else if {_part} is "White Trail":
+		cosmeticApplyWhitetrail({_p})
+
+	else if {_part} is "Footsteps":
+		cosmeticApplyFootsteps({_p})
+
+	else if {_part} is "Wet":
+		cosmeticApplyWet({_p})
+
+	else if {_part} is "Cat":
+		cosmeticApplyCat({_p})
+
+	else if {_part} is "Bedrock Fog":
+		cosmeticApplyBedrockfog({_p})
+
+	else if {_part} is "Fragile":
+		cosmeticApplyFragile({_p})
+
+	else if {_part} is "Candle":
+		cosmeticApplyCandle({_p})
+
+	else if {_part} is "Enchanting":
+		cosmeticApplyEnchanting({_p})
+
+	else if {_part} is "Melon Ears":
+		cosmeticApplyMelonears({_p})
+
+	else if {_part} is "Bone meal":
+		cosmeticApplyBonemeal({_p})
+
+	else if {_part} is "Shoulder Pixie":
+		cosmeticApplyShoulderpixie({_p})
+
+	else if {_part} is "Minty":
+		cosmeticApplyMinty({_p})
+
+	else if {_part} is "Dizzy":
+		cosmeticApplyDizzy({_p})
+
+
+
+	#MEDIUM EFFECTS
+
+	#Medium 1
+	else if {_part} is "Hot Head":
+		cosmeticApplyHothead({_p})
+
+	else if {_part} is "Chill Box":
+		cosmeticApplyChillbox({_p})
+
+	else if {_part} is "Flowery":
+		cosmeticApplyFlowery({_p})
+
+	else if {_part} is "Nyan Trail":
+		cosmeticApplyNyantrail({_p})
+
+	else if {_part} is "Halo":
+		cosmeticApplyHalo({_p})
+
+	else if {_part} is "Hero":
+		cosmeticApplyHero({_p})
+
+	else if {_part} is "Potion Mishaps":
+		cosmeticApplyPotionmishaps({_p})
+	
+	
+	#LARGE EFFECTS
+	
+	#Large 1
+	else if {_part} is "Kitsune":
+		cosmeticApplyKitsune({_p})
+
+	else if {_part} is "Ritual":
+		cosmeticApplyRitual({_p})
+
+	else if {_part} is "Hypoxia":
+		cosmeticApplyHypoxia({_p})
+
+

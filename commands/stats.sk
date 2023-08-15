@@ -1,0 +1,11 @@
+command /playtime [<offline player>]:
+	aliases: pt, time
+	trigger:
+		if arg-1 is set:
+			set {_p} to arg-1
+		else:
+			set {_p} to player
+		if {_p}'s time played is not greater than 1 tick:
+			send "&r[&aStats&r] Sorry this player does not exist!"
+		else:
+			send "&r[&aStats&r] %{_p}'s name%'s time played is &b%{_p}'s time played%"

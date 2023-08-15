@@ -1,0 +1,82 @@
+on load:
+	set {tr::location::spawn} to location(0.5, 0, 0.5, world "spawn")
+
+on join:
+	if {tr::joins::*} does not contain player's uuid:
+		firstJoin(player)
+		set join message to "&e&l%Player%&e has joined for the first time! &6(##%number of indexes of {tr::joins::*}%)"
+	else:
+		set join message to "&e&l%player%&e has joined back"
+	
+	if player's name is "Melanchophy":
+		set {_name} to "&aDev &2•&f Melanchophy"
+		set player's tablist name to "%{_name}%"
+		set player's display name to "%{_name}%"
+			
+	else if player's name is "Melanchophe":
+		set {_name} to "&dCute &5•&f Furry..."
+		set player's tablist name to "%{_name}%"
+		set player's display name to "%{_name}%"
+	
+	else if player has permission "group.mod":
+		set {_name} to "&bMod &3•&f %Player's name%"
+		set player's tablist name to "%{_name}%"
+		set player's display name to "%{_name}%"
+	else:
+		#CUSTOM PLAYER NICKNAMES
+		if player's name is ".TJP6560" or "_Ty13r_14":
+			set {_name} to "&eP &6•&f Twilight"
+			set player's tablist name to "%{_name}%"
+			set player's display name to "%{_name}%"
+	
+		else:
+			set {_name} to "&eP &6•&f %player's name%"
+			set player's tablist name to "%{_name}%"
+			set player's display name to "%{_name}%"
+	disguise player as player's name
+	#Variable Stuffs
+	if {tr::player::%player's uuid%::soulbites} is not set:
+		set {tr::player::%player's uuid%::soulbites} to 0
+	set {te::player::%player's uuid%::mana} to 0
+
+
+
+on disconnect:
+	set leave message to "&6&l%player%&6 has left"
+	clear {te::player::%player%::*}
+	clear {te::player::%player's uuid%::*}
+	clear {te::%player%::*}
+	clear {te::%player's uuid%::*}
+	
+
+	#Variable stuff
+	if {tr::player::%player's uuid%::soulbites} is 0:
+		clear {tr::player::%player's uuid%::soulbites}
+	if {tr::player::%player's uuid%::maxMana} is 10:
+		clear {tr::player::%player's uuid%::maxMana}
+
+command /reset:
+	permission: pg.cmd.reset
+	trigger:
+		remove player's uuid from {tr::joins::*}
+		kick player due to "&fPlease reconnect to finish the command"
+
+function firstJoin(p: player):
+	remove {_p}'s uuid from {tr::joins::*}
+	
+	loop indexes of {tr::player::%{_p}'s uuid%::home::*}:
+		set {_h::%loop-value%} to {tr::player::%{_p}'s uuid%::home::%loop-value%}
+	clear {tr::player::%{_p}%::manaTick}
+	clear {tr::player::%{_p}%::*}
+	clear {te::player::%{_p}%::*}
+	clear {tr::player::%{_p}'s uuid%::*}
+	clear {te::player::%{_p}'s uuid%::*}
+	add {_p}'s uuid to {tr::joins::*}
+	loop indexes of {_h::*}:
+		set {tr::player::%{_p}'s uuid%::home::%loop-value%} to {_h::%loop-value%}
+	set {tr::player::%{_p}'s uuid%::joinTime} to now
+	teleport {_p} to {tr::location::spawn}
+	wait 40 ticks
+	if {_p} is online:
+		launch flickering trailing burst firework colored blue and green at {_p}
+		play sound "entity.experience_orb.pickup" at {_p}

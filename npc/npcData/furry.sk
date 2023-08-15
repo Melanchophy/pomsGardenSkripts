@@ -1,0 +1,83 @@
+on right click on entity:
+	if uncolored name of targeted entity contains "[NPC] ":
+		set {_name::*} to uncolored name of targeted entity split at "[NPC] "
+		set {_npc} to 2nd element out of {_name::*}
+		if npcCheck(player, "%{_npc}%") is not true:
+			clear {te::player::%player's uuid%::npcCanProgress::*}
+			exit
+	set {_b} to {te::player::%player's uuid%::lastNPCblock::%{_npc}%}
+	set {_l} to {te::player::%player's uuid%::lastNPCline::%{_npc}%}
+
+	
+	if {_npc} is "Furry...":
+		if {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}+2%} is not set:
+			if {tr::npc::%{_npc}%::dialogue::%{_b}%::%{_l}+1%} is not set:
+				if {_b} is 1:
+					if player's inventory contains 4 sticks:
+						remove 4 sticks from player's inventory
+						clear {te::player::%player's uuid%::npcCanProgress::%{_npc}%}
+					else:
+						set {te::player::%player's uuid%::npcCanProgress::%{_npc}%} to false
+						
+				if {_b} is 2:
+					if player's inventory contains 16 logs:
+						remove 16 logs from player's inventory
+						clear {te::player::%player's uuid%::npcCanProgress::%{_npc}%}
+					else:
+						set {te::player::%player's uuid%::npcCanProgress::%{_npc}%} to false
+						
+				if {_b} is 3:
+					if player's inventory contains 1 cake:
+						remove 1 cake from player's inventory
+						clear {te::player::%player's uuid%::npcCanProgress::%{_npc}%}
+					else:
+						set {te::player::%player's uuid%::npcCanProgress::%{_npc}%} to false
+						
+				if {_b} is 4:
+					if player's inventory contains 1 diamond:
+						remove 1 diamond from player's inventory
+						clear {te::player::%player's uuid%::npcCanProgress::%{_npc}%}
+					else:
+						set {te::player::%player's uuid%::npcCanProgress::%{_npc}%} to false
+				if {_b} is 5:
+					set {te::player::%player's uuid%::npcCanProgress::%{_npc}%} to false
+				
+		else:
+			clear {te::player::%player's uuid%::npcCanProgress::%{_npc}%}
+
+on load:
+	set {_npc} to "Furry..."
+	
+	clear {tr::npc::%{_NPC}%::*}
+	
+	set {tr::npc::%{_NPC}%::dialogue::1::1} to "Hai! I'm Furry, I'm Poms fetch pet... &7(Right click to continue)"
+	set {tr::npc::%{_NPC}%::dialogue::1::2} to "Technically you are now as well hehe, I'll ask you for some items and give you anything I dig up in the meantime!"
+	set {tr::npc::%{_NPC}%::dialogue::1::3} to "You'd be surprised how much dirt I can find on the government officials..."
+	set {tr::npc::%{_NPC}%::dialogue::1::4} to "For you first task please - &nfetch me 4 sticks&r, I just want an excuse to gift you something."
+	set {tr::npc::%{_NPC}%::altdialogue::1} to "Gimme four sticks! &o*crab dances*%nl%&7You stare in disbelief..."
+	
+	set {tr::npc::%{_NPC}%::dialogue::2::1} to "Phst-, Cute, you actually gave me 4 sticks..."
+	set {tr::npc::%{_NPC}%::dialogue::2::2} to "I hope this item helps you out, be careful, you can only obtain quest-line items once!"
+	set {tr::npc::%{_npc}%::dialogue::2::2::item} to "Dark Stone Sword"
+	set {tr::npc::%{_NPC}%::dialogue::2::3} to "&o*attempts to hug you*%nl%&7Dev - You may hate this... Sorry (not sorry) if you do!"
+	set {tr::npc::%{_NPC}%::dialogue::2::4} to "Now &ngrab me 16x logs&f we gonna need some more for storge."
+	set {tr::npc::%{_NPC}%::altdialogue::2} to "&oAAAAA&f 16 wooden logs, place it in my mouth!"
+	
+	set {tr::npc::%{_NPC}%::dialogue::3::1} to "Good human! I spat on this sword, and now it's magical! Here."
+	set {tr::npc::%{_npc}%::dialogue::3::1::item} to "Dark Iron Sword"
+	set {tr::npc::%{_NPC}%::dialogue::3::2} to "My next task for you is to &nbake a cake for me!&f I'll give you some tea, sis."
+	set {tr::npc::%{_NPC}%::altdialogue::3} to "Shove a cake in my mouth! I wouldn't mind if you threw it at me."
+	
+	set {tr::npc::%{_NPC}%::dialogue::4::1} to "BAHAHAHAHA- &o*gasps for air*"
+	set {tr::npc::%{_npc}%::dialogue::4::1::item} to "my darling nia"
+	set {tr::npc::%{_NPC}%::dialogue::4::2} to "Such a sweet poem, isn't it... Truthfully, while I laugh, I think it is pretty sweet that even humans have a sweet side."
+	set {tr::npc::%{_NPC}%::dialogue::4::3} to "Though, I can't tell if you have one. Anyhoo!"
+	set {tr::npc::%{_NPC}%::dialogue::4::4} to "If you can &ngib me 1 diamond&f for now, that'd be lovely."
+	
+	set {tr::npc::%{_NPC}%::altdialogue::4} to "Gimme Dimos I mean Dimos I mean Dimons I mean a diamond...%nl%&7Why are Furry's eyes glistening?"
+	
+	set {tr::npc::%{_NPC}%::dialogue::5::1} to "Welp, thankies, that will be all for now. ^^"
+	set {tr::npc::%{_NPC}%::dialogue::5::2} to "Welp, thankies, that will be all for now. ^^"
+	
+	set {tr::npc::%{_NPC}%::altdialogue::5} to "That's all my content for today, soz sis."
+	

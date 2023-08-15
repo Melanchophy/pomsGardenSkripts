@@ -1,0 +1,65 @@
+command /timber:
+    trigger:
+        if {tr::player::%player's uuid%::timber} is not set:
+            set {tr::player::%player's uuid%::timber} to true
+            send "&2&l>&7 Timber is now enabled."
+            send "&7- Sneak whilst breaking a log to break it normally."
+        else:
+            clear {tr::player::%player's uuid%::timber}
+            send "&4&l>&7 Timber is now disabled."
+        send "&7- This is an experimental feature."
+        send "&7- Please report any bugs."
+
+on break:
+    if "%event-block%" contains "log":
+        if player's tool is an axe:
+            if player is not sneaking:
+                if {tr::player::%player's uuid%::timber} is true:
+                    if cooldown(player, "timber", 1 second) is true:
+                        set {_id} to player's uuid
+                        clear {te::timber::%{_id}%::*}
+
+                        set {te::timber::%{_id}%} to true
+                        set {te::timber::%{_id}%::1} to event-block
+                        timber(player, event-block, player's uuid)
+
+
+function timber(p: player, block: block, id: string):
+    set {te::timber::%{_id}%} to true
+    if amount of indexes of {te::timber::%{_id}%::*} is less than 90:
+        if "%location at {_block}%" is "%location at {te::timber::%{_id}%::1}%":
+            set {te::timber::%{_id}%::1} to type of {_block}
+            set {_t} to true
+        else if {te::timber::%{_id}%::*} does not contain location at {_block}:
+            add location of {_block} to {te::timber::%{_id}%::*}
+            set {_t} to true
+        
+        if {_t} is true:
+            break {_block}
+            damageTool({_p}, 1)
+            make 2 of dust_color_transition using dustTransition(brown, light gray, 6) at {_block}
+            play sound "block.grass.break" with volume 0.3 at {_block}
+            wait 2 tick
+
+            if {_p}'s tool is an axe:
+                loop blocks in radius 2 of location at {_block}:
+                    if "%type of loop-block%" contains "%{te::timber::%{_id}%::1}%":
+                        
+                        timber({_p}, loop-block, {_id})
+    clear {te::timber::%{_id}%}
+
+on inventory click:
+    if {te::timber::%player's uuid%} is set:
+        cancel event
+        exit
+
+on swap hand items:
+    if {te::timber::%player's uuid%} is set:
+        cancel event
+        exit
+
+on tool change:
+    if {te::timber::%player's uuid%} is set:
+        cancel event
+        exit
+

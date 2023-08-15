@@ -1,0 +1,49 @@
+on spawn of entity:
+    if event-world is "spawn":
+        wait 1 ticks
+        set {_n} to uncolored name of event-entity
+        if {_n} is "beock":
+            set {_loc1} to {tr::boss::%{_n}%::ArenaLoc1}
+            set {_loc2} to {tr::boss::%{_n}%::ArenaLoc2}
+            wait 6 seconds
+            while event-entity is alive:
+                loop creepers where [input's location is within {_loc1} and {_loc2}]:
+                    loop creepers where [input's location is within {_loc1} and {_loc2}]:
+                        set {_trigger} to false
+                if {_trigger} is not false:
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        send "&cBeock's damage tethers are raising..." to loop-player
+                    play sound "entity.elder_guardian.curse" with volume 2 with pitch 0.7 at event-entity
+                    wait 40 ticks
+                    play sound "entity.guardian.ambient_land" with volume 1 with pitch 0.3 at event-entity
+                    if {te::boss::%{_n}%} is set:
+                        loop 3 times:
+                            set {_loc} to random element out of {tr::boss::%{_n}%::damageTetherLoc::*} where [input is not {te::boss::%{_n}%::lastDTLoc::*}]
+                            add {_loc} to {te::boss::%{_n}%::lastDTLoc::*}
+                            particleLine(location at event-entity's head, {_loc}, end_rod, 2)
+                            spawn creeper at {_loc} with nbt from "{powered:1,CustomName:'[{""text"":""Damage Tether"",""color"":""red""}]',NoAI:1b}"
+                    loop 3 times:
+                        wait 5 ticks
+                        play sound "entity.guardian.ambient_land" with volume 1 with pitch random number between 0.2 and 0.4 at event-entity
+                clear {_trigger}
+                loop 24 times:
+                    wait 20 ticks
+                    if event-entity is not alive:
+                        exit loop
+            clear {te::boss::%{_n}%::*}
+            clear {te::boss::%{_n}%}
+
+
+on damage:
+    if event-world is "spawn":
+        if uncolored name of victim is "Beock":
+            set {_n} to uncolored name of victim
+            set {_loc1} to {tr::boss::%{_n}%::ArenaLoc1}
+            set {_loc2} to {tr::boss::%{_n}%::ArenaLoc2} 
+            loop creepers where [input's location is within {_loc1} and {_loc2}]:
+                if cooldown(attacker, "BeockImmune", 3 seconds) is true:
+                    loop players where [input's location is within {_loc1} and {_loc2}]:
+                        send "&cBeock can't be harmed whilst damage tethers are alive!" to loop-player
+                play sound "entity.enderman.hurt" with pitch 1.8 at attacker for attacker
+                cancel event
+                exit

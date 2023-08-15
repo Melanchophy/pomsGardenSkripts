@@ -1,0 +1,21 @@
+on right click:
+    if custom model data of player's tool is 39:
+        if cooldown(player, "Taunt", 10 seconds) is true:
+            if manaConsume(player, 5) is true:
+                apply absorption 2 to player for 1 minute
+                apply strength 3 to player for 4 seconds
+                loop 3 times:
+                    play sound "entity.ghast.scream" with volume 1.2 with pitch random number between 1 and 1.5 at player
+                    wait 5 ticks
+                wait 10 ticks
+                loop 3 times:
+                    play sound "entity.ghast.scream" with volume 1.2 with pitch random number between 1 and 1.5 at player
+                    wait 5 ticks
+                
+
+
+
+
+
+
+

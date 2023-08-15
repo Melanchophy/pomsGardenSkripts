@@ -1,0 +1,79 @@
+on armor change:
+    set {_cmdNew} to custom model data of new armor item
+    set {_cmdOld} to custom model data of old armor item
+    if {_cmdNew} + {_cmdOld} is not 0:
+        #Adds/Removes the stats of armors' data to the player
+        addArmourStats(player, {_cmdOld}, -1)
+        addArmourStats(player, {_cmdNew}, 1)
+
+        #This is for set bonuses... I'll be honest, idek what's going on 100%, it just wokrs!
+
+        #Checks if the custom model data of the player's helmet is within the CMD of any other armor. (ie, is the player's wearing set armor? is it complete?)
+        loop 4 times:
+            if custom model data of slot 40 - loop-value of player's inventory is not custom model data of player's helmet - 1 + loop-value:
+                set {_setbonus} to false
+                exit loop
+        
+        #Applies/Removes the setbonus of the armor if needed
+        if {_setbonus} is false:
+            if {te::player::%player's uuid%::setbonus} is set:
+                clear {te::player::%player's uuid%::setbonus}
+                addArmourBonus(player, {_cmdOld}, -1)
+        else:
+            if {te::player::%player's uuid%::setbonus} is not custom model data of player's helmet:
+                set {te::player::%player's uuid%::setbonus} to custom model data of player's helmet
+                addArmourBonus(player, {_cmdNew}, 1)
+        manaChange(player, 0)
+
+on right click:
+    if {tr::item::%custom model data of player's tool%::trinket} is set:
+        cancel event
+        if cooldown(player, "PocketSwap", 0.2 second) is true:
+            trinketSwap(player)
+
+command /pocket:
+    trigger:
+        if {tr::player::%player's uuid%::trinket} is set:
+            if name of {tr::player::%player's uuid%::trinket} is set:
+                send "&6[&ePocket&6] &7You have taken out %uncolored name of {tr::player::%player's uuid%::trinket}% from your pocket" to player
+            else:
+                send "&6[&ePocket&6] &7You have taken out %type of {tr::player::%player's uuid%::trinket}% from your pocket" to player
+            
+            addArmourStats(player, custom model data of {tr::player::%player's uuid%::trinket}, -1)
+            give player 1 of {tr::player::%player's uuid%::trinket}
+            clear {tr::player::%player's uuid%::trinket}
+            manaChange(player, 0)
+
+function trinketSwap(p: player):
+    if name of {_p}'s tool is set:
+        send "&6[&ePocket&6] &7You have pocketed %uncolored name of {_p}'s tool%" to {_p}
+    else:
+        send "&6[&ePocket&6] &7You have pocketed %type of {_p}'s tool%" to {_p}
+
+    addArmourStats({_p}, custom model data of {_p}'s tool, 1)
+    addArmourStats({_p}, custom model data of {tr::player::%{_p}'s uuid%::trinket}, -1)
+    
+    give {_p} 1 of {tr::player::%{_p}'s uuid%::trinket}
+    set {tr::player::%{_p}'s uuid%::trinket} to {_p}'s tool
+    remove 1 from item amount of {_p}'s tool
+
+    manaChange({_p}, 0)
+
+
+on disconnect:
+    #Fixes the armor stats being applied again when players rejoin
+    addArmourStats(player, custom model data of {tr::player::%player's uuid%::trinket}, -1)
+    addArmourStats(player, custom model data of player's helmet, -1)
+    addArmourStats(player, custom model data of player's leggings, -1)
+    addArmourStats(player, custom model data of player's chestplate, -1)
+    addArmourStats(player, custom model data of player's boots, -1)
+
+
+
+function addArmourStats(p: player, cmd: number, modifier: integer):
+    loop indexes of {tr::item::%{_cmd}%::*}:
+        add {tr::item::%{_cmd}%::%loop-value%} *{_modifier} to {te::player::%{_p}'s uuid%::%loop-value%}
+
+function addArmourBonus(p: player, cmd: number, modifier: integer):
+    loop indexes of {tr::armorSetBonus::%{_cmd}%::*}:
+        add {tr::armorSetBonus::%{_cmd}%::%loop-value%} *{_modifier} to {te::player::%{_p}'s uuid%::%loop-value%}

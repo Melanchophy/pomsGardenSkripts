@@ -1,0 +1,137 @@
+on load:
+	#This just clears all the previous points, just in case you want to remove a particle point.
+	clear {tr::cosmetics::5::Kitsune::*}
+	
+	#This sets up all the points where we hand a particle
+	#the name after "kitsune::" in the variable, defines a color channel
+	
+	#orbs around the player's head
+	add vector(0.7, 1.7, -0.1) to {tr::cosmetics::5::Kitsune::orb::*}
+	add vector(-0.7, 1.7, -0.1) to {tr::cosmetics::5::Kitsune::orb::*}
+	add vector(0, 2.3, 0.1) to {tr::cosmetics::5::Kitsune::orb::*}
+	
+	#three seperate tails
+	add vector(0.1, 0.8, -0.3) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(0.125, 0.95, -0.5) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(0.175, 1.05, -0.8) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(0.225, 1.15, -1.1) to {tr::cosmetics::5::Kitsune::tail::*}
+	
+	add vector(-0.1, 0.8, -0.3) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(-0.125, 0.95, -0.5) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(-0.175, 1.05, -0.8) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(-0.225, 1.15, -1.1) to {tr::cosmetics::5::Kitsune::tail::*}
+	
+	add vector(0, 0.7, -0.3) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(0, 0.7, -0.5) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(0, 0.7, -0.8) to {tr::cosmetics::5::Kitsune::tail::*}
+	add vector(0, 0.7, -1.1) to {tr::cosmetics::5::Kitsune::tail::*}
+	
+	#the white ends of the tails
+	add vector(0, 0.7, -1.3) to {tr::cosmetics::5::Kitsune::brush::*}
+	add vector(-0.275, 1.25, -1.1) to {tr::cosmetics::5::Kitsune::brush::*}
+	add vector(0.275, 1.25, -1.1) to {tr::cosmetics::5::Kitsune::brush::*}
+
+	#We now apply the cosmetic function!
+function cosmeticApplyKitsune(p: player):
+
+	#While the player's cosmetic is "Kitsune" we do all this funky stuff!
+	while {te::player::%{_p}%::activeCosmetic} is "Kitsune":
+		wait 2 ticks
+		draw 1 of block using block of gold at {_p} with offset vector(0.3, 0.1, 0.3) with extra 0
+		
+		#This will set our yaw variable, used later on. This is the difference in the player's yaw from the last time we looped.
+		set {_yaw} to ({_p}'s yaw - {_yaw})
+		
+		#Here we loop all color channels!
+		loop indexes of {tr::cosmetics::5::Kitsune::*}:
+			
+			#This adds all our points of the color channel, to a locally set variable (I did this in hopes of optimization, I heard local vars are supposed to be more efficient in JavaScript)
+			if {_activeVariables::%loop-value%} is not set:
+				add {tr::cosmetics::5::Kitsune::%loop-value%::*} to {_l::%loop-value%::*}
+				set {_activeVariables::%loop-value%} to true
+			
+			#And now we loop all the points from the 'loop-color' channel
+			loop {_l::%loop-value%::*}:
+				#This effect rotates all of our particle points by the difference in yaw from the last time we looped, ie. if the player's yaw hasn't changed, we don't rotate the particles
+				rotate {_l::%loop-value-1%::*} around y-axis by ({_yaw}*-1) / size of {_l::%loop-value-1%::*}
+				
+				if loop-value-1 is "orb":
+					make 1 dust using dustOption(yellow, 1.5) at {_p}'s location ~ loop-value-2
+					
+				else if loop-value-1 is "tail":
+					make 1 dust using dustOption(orange, 1) at {_p}'s location ~ loop-value-2
+					
+				else if loop-value-1 is "brush":
+					make 1 dust using dustOption(white, 1.1) at {_p}'s location ~ loop-value-2
+						
+		#This resets the yaw variable, so we aren't constantly rotating the particles by [15 > 30 > 45] when the player is not moving.
+		set {_yaw} to {_p}'s yaw
+				
+# Made by Melanchophy, aka Chophy, Melan(y), Pomo and Homo... Wait what's that doing here?
+
+
+
+
+
+
+
+function cosmeticApplyHypoxia(p: player):
+
+	#While the player's cosmetic is "Hypoxia" we do all this funky stuff!
+	while {te::player::%{_p}%::activeCosmetic} is "Hypoxia":
+		loop 15 times:
+			wait 3 ticks
+			add 3 to {_l}
+			particleArc(location 0.25 blocks above {_p}, {_l}, 1, 4, 1 tick, 90, 0.8, crit, 0)
+			particleArc(location 0.19 blocks above {_p}, {_l}*-1, 1, 4, 1 tick, 90, 1.3, crit, 0)
+			particleArc(location 0.1 blocks above {_p}, {_l}*2, 1, 4, 1 tick, 90, 1.8, crit, 0)
+			if {_l} is greater than 360:
+				set {_l} to 0
+			make 2 ash at location 1 block above {_p} with offset vector(2, 2, 2)
+			make 2 warped spore at location 1 block above {_p} with offset vector(1.2, 1.2, 1.2) with extra 0
+			if loop-value is 9:
+				show sweep attack at {_p}
+				loop 3 times:
+					make 3 dust using dustOption(cyan, 2) at location random number between 0 and 2 blocks above, random number between -1 and 1 behind and random number between -1 and 1 blocks left of {_p} with extra 1
+
+
+
+
+
+
+
+
+
+
+
+
+on load:
+	clear {tr::cosmetics::5::ritual::*}
+	loop 24 times:
+		set {_v} to spherical vector radius 2, yaw (loop-value * 15), pitch 0
+		add {_v} to {tr::cosmetics::5::ritual::*}
+	loop 4 times:
+		loop 6 times:
+			set {_v} to spherical vector radius 0.333 * loop-value-2, yaw (loop-value-2 * 5) + (loop-value-1 * 90), pitch 0
+			add {_v} to {tr::cosmetics::5::ritual::*}
+	loop 4 times:
+		loop 6 times:
+			set {_v} to spherical vector radius 0.333 * loop-value-2, yaw (loop-value-2 * -5) + (loop-value-1 * 35), pitch 0
+			add {_v} to {tr::cosmetics::5::ritual::*}
+
+
+function cosmeticApplyRitual(p: player):
+	while {te::player::%{_p}%::activeCosmetic} is "ritual":
+		set {_ploc} to {_p}'s vector
+		wait 4 ticks
+		if {_p}'s vector is {_ploc}:
+			if {_activeVariables} is not set:
+				add {tr::cosmetics::5::ritual::*} to {_l::*}
+				set {_activeVariables} to true
+			
+			loop {_l::*}:
+				make 1 dust using dustOption(red, 1.2) at {_p}'s location ~ loop-value
+			make 2 of dripping_lava at location 0.2 blocks above {_p} with offset vector(1, 0.2, 1)
+		else:
+			make 8 dust using dustOption(red, 1) at location 0.1 blocks above {_p} with offset vector(0.5, 0, 0.5)
+

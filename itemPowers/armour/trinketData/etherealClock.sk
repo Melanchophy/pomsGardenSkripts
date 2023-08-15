@@ -1,0 +1,5 @@
+on load:
+    set {_cmd} to 71
+    set {tr::item::%{_cmd}%::trinket} to true
+    set {tr::item::%{_cmd}%::manaregen} to 4
+    set {tr::item::%{_cmd}%::manaDamagePercent} to -0.60

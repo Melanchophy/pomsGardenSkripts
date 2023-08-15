@@ -1,0 +1,5 @@
+function giveItem(p: player, i: text):
+	if {tr::item::%{_i}%} exists:
+		give {_p} {tr::item::%{_i}%}
+	else:
+		give {_p} {_i} parsed as item

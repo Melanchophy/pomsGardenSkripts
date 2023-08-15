@@ -1,0 +1,7 @@
+on command "minecraft:me":
+    cancel event
+    send "&cShut up (:"
+
+on command "me":
+    cancel event
+    send "&cShut up (:"

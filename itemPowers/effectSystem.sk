@@ -1,0 +1,86 @@
+function coddle(e: entity, t: timespan, set: boolean):
+	if setEffect({_e}, {_t}, {_set}, "Coddle") is true:
+		while now < {te::%{_e}%::effects::coddle}:
+			if {_e}'s health is greater than 0:
+				heal {_e} by {_e}'s max health / 20
+				make 4 of heart at {_e} with offset vector(0.4, 1, 0.4) with extra 0.5
+				wait 10 ticks
+			else:
+				exit loop
+
+function bird(e: entity, t: timespan, set: boolean):
+	if setEffect({_e}, {_t}, {_set}, "Bird") is true:
+		while now < {te::%{_e}%::effects::Bird}:
+			if {_e}'s health is greater than 0:
+				make 2 of cloud at {_e} with offset vector(0.4, 0.1, 0.4) with extra 0
+				wait 10 ticks
+			else:
+				exit loop
+
+function stunned(e: entity, t: timespan, set: boolean):
+	if setEffect({_e}, {_t}, {_set}, "stunned") is true:
+		set {_l} to location of {_e}
+		while now < {te::%{_e}%::effects::stunned}:
+			if {_e}'s health is greater than 0:
+				teleport {_e} to {_l}
+				wait 1 ticks
+			else:
+				exit loop
+
+on load:
+	set {tr::effect::Bird::color} to "&f"
+	set {tr::effect::Coddle::color} to "&e"
+	set {tr::effect::Stunned::color} to "&8"
+
+function setEffect(e: entity, t: timespan, set: boolean, eff: string) :: boolean:
+	if {_e} exists:
+		if {te::%{_e}%::effects::%{_eff}%} is not set:
+			if {_set} is true:
+				set {te::%{_e}%::effects::%{_eff}%} to {_t} after now
+			else:
+				if {te::%{_e}%::effects::%{_eff}%} is not set:
+					set {te::%{_e}%::effects::%{_eff}%} to now
+				set {te::%{_e}%::effects::%{_eff}%} to {_t} after {te::%{_e}%::effects::%{_eff}%}
+			checkSendEffects({_e}, {_eff})
+			return true
+		else:
+			if {_set} is true:
+				set {te::%{_e}%::effects::%{_eff}%} to {_t} after now
+			else:
+				set {te::%{_e}%::effects::%{_eff}%} to {_t} after {te::%{_e}%::effects::%{_eff}%}
+	return false
+
+
+
+function checkSendEffects(e: entity, eff: string):
+	if {te::%{_e}%::sendingEffs} is not set:
+		set {te::%{_e}%::sendingEffs} to true
+		while {te::%{_e}%::effects::*} is set:
+		
+			loop {te::%{_e}%::effects::*}:
+				if {te::%{_e}%::effects::%loop-index%} <= 0.001 seconds after now:
+					clear {te::%{_e}%::effects::%loop-index%}
+					if {te::%{_e}%::effects::*} is not set:
+						clear {te::%{_e}%::sendingEffs}
+						exit
+			
+			loop {te::%{_e}%::effects::*}:
+				set {_effectTime::%loop-index%} to "%difference between now and {te::%{_e}%::effects::%loop-index%}%"
+				replace " Seconds" and " Second" with "s" in {_effectTime::%loop-index%}
+				replace " Minutes" and " Minute" with "m" in {_effectTime::%loop-index%}
+				replace " Hours" and " Hour" with "h" in {_effectTime::%loop-index%}
+				replace " Days" and " Day" with "d" in {_effectTime::%loop-index%}
+				replace " and " with " " in {_effectTime::%loop-index%}
+				set {_effect::%loop-index%} to "%loop-index in strict proper case%"
+				
+				set {_eff::%loop-index%} to "%{tr::effect::%loop-index%::color}%%{_effect::%loop-index%}% <%{_effectTime::%loop-index%}%>&r"
+				
+				
+			send action bar "&7Effects: &e%{_eff::*}%" to {_e}
+			
+			clear {_eff::*}
+			if {_e}'s health is not greater than 0:
+				clear {te::%{_e}%::effects::*}
+			wait 20 ticks
+		clear {te::%{_e}%::sendingEffs}
+		

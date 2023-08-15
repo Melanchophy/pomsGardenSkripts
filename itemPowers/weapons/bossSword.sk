@@ -1,0 +1,14 @@
+on damage of entity:
+    if damage cause is attack:
+        if custom model data of attacker's tool is 54:
+            if cooldown(attacker, "zombossSword", 0.5 seconds) is true:
+                if damageCheck(attacker, victim) is true:
+                    play sound "entity.generic.extinguish_fire" in voice category with volume 0.8 with pitch 1.1 for attacker at attacker
+                    loop 5 times:
+                        if {_totalHealing} + sqrt(damage)/10 is greater than 2:
+                            heal attacker by 2 - {_totalHealing}
+                            exit
+                        else:
+                            heal attacker by sqrt(damage)/10
+                            add sqrt(damage)/10 to {_totalHealing}
+                        wait 4 ticks

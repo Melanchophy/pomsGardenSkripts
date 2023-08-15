@@ -1,0 +1,7 @@
+command /pp:
+    trigger:
+        if {tr::%player's uuid%::pp} is not set:
+            set {tr::%player's uuid%::pp} to random integer between 1 and 8
+        else if {tr::%player's uuid%::pp} is greater than 8:
+            set {tr::%player's uuid%::pp} to random integer between 1 and 8
+        send "&f[&dPP Merchant&f] %{tr::%player's uuid%::pp}% inches!"

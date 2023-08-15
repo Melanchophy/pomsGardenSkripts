@@ -1,0 +1,46 @@
+on load:
+	set {_npc} to "Daisy"
+	clear {tr::npc::%{_NPC}%::*}
+	add "Yay! A new friend! :3" to {tr::npc::%{_npc}%::dialogue::*}
+	add "We're all best friends here!" to {tr::npc::%{_npc}%::dialogue::*}
+	add "I miss my garden, we had to close most areas. 3:" to {tr::npc::%{_npc}%::dialogue::*}
+	add "Sunny is my cuddle friend. ^-^ Shake is pathetically adorable. Prowess is really smart. And Cotlet... Aw..." to {tr::npc::%{_npc}%::dialogue::*}
+	add "I love flowers so much! <3" to {tr::npc::%{_npc}%::dialogue::*}
+	add "One time Cotlet made some white powder with poppies, it made me feel funny." to {tr::npc::%{_npc}%::dialogue::*}
+
+	#Shop
+	add spider eye named "&fAvocado Pit" with lore "&7The facility needs a little power%nl%&7trade a &nredstone block&7 for this?" with custom model data 81 to {tr::npc::%{_npc}%::shop::*}
+	add ghast tear named "&fAbiu Pit" with lore "&7Daisy would love children but%nl%&7hasn't been able to since the hypoxide...%nl%&7Trade a &nfilled kidnapping sack&7 for this item?" with custom model data 87 to {tr::npc::%{_npc}%::shop::*}
+	add beetroot seeds named "&fStrawberry Seeds" with lore "&7Daisy loves pretty plants.%nl%&7Trade a &ncherry sapling&7 for this item?" with custom model data 85 to {tr::npc::%{_npc}%::shop::*}
+	add glowstone named "&fSuspicious Package" with lore "&7An antique from long ago.%nl%&7Trade &n16 netherite ingots&7 for this item?" with custom model data 83 to {tr::npc::%{_npc}%::shop::*}
+
+
+on inventory click:
+    if "%event-inventory%" is "inventory of <none>":
+        #Soul Bites
+        if uncolored name of player's current inventory is "[Ç] Daisy's Shop":
+            if uncolored name of event-item is "Avocado Pit":
+                if player's inventory contains a redstone block:
+                    remove 1 redstone block from player's inventory
+                    set {_t} to true
+            else if uncolored name of event-item is "Abiu Pit":
+                if player's inventory contains glow ink sac with custom model data 11:
+                    remove glow ink sac with custom model data 11 from player's inventory
+                    set {_t} to true
+            else if uncolored name of event-item is "Strawberry Seeds":
+                if player's inventory contains cherry sapling:
+                    remove cherry sapling from player's inventory
+                    set {_t} to true
+            else if uncolored name of event-item is "Suspicious Package":
+                if player's inventory contains 16 netherite ingots:
+                    remove 16 netherite ingots from player's inventory
+                    set {_t} to true
+            if {_t} is true:
+                set {_i} to event-item
+                clear {_i}'s lore
+                give player {_i}
+
+
+
+			
+

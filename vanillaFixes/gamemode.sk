@@ -1,0 +1,28 @@
+command /gmc:
+    permission: gm.creative
+    trigger:
+        set player's gamemode to creative
+
+command /gmspec:
+    permission: gm.spectator
+    trigger:
+        set player's gamemode to spectator
+
+command /gms:
+    permission: gm.survival
+    trigger:
+        set player's gamemode to survival
+
+
+command /gma:
+    permission: gm.adventure
+    trigger:
+        set player's gamemode to adventure
+
+command /gm <text>:
+    permission: gm.gamemode
+    trigger:
+        set {_gm} to arg-1 parsed as gamemode
+        if player has permission "gm.%arg-1%":
+            set player's gamemode to {_gm}
+
